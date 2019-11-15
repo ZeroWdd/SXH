@@ -1,0 +1,18 @@
+server:
+  port: 8086
+spring:
+  application:
+    name: sms-service
+  rabbitmq:
+    host: 192.168.159.131
+    username: guest
+    password: guest
+    virtual-host: /
+  redis:
+    host: 192.168.159.131
+aliyun:
+  sms:
+    accessKeyId: "LTAI4FxtgTG9eBLHrkBsGC4d"
+    accessKeySecret: "n7PimBiLqJUsmSppr7xtd12L3y7uop"
+    singnName: "商小惠"
+    verifyCodeTemplate: "SMS_176914322"

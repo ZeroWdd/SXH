@@ -1,0 +1,48 @@
+server:
+  port: 10010
+spring:
+  application:
+    name: leyou-gateway
+  main:
+    allow-bean-definition-overriding: true
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+zuul:
+  prefix: /api # 路由路径前缀
+  routes:
+    item-service:
+      path: /item/**
+      serviceId: item-service
+    upload-service:
+      path: /upload/**
+      serviceId: upload-service
+      strip-prefix: false
+    search-service:
+      path: /search/**
+      serviceId: search-service
+    user-service:
+      path: /user/**
+      serviceId: user-service
+    auth-service:
+      path: /auth/**
+      serviceId: auth-service
+    cart-service:
+      path: /cart/**
+      serviceId: cart-service
+  add-host-header: true # 携带请求头本身的head头信息
+  sensitive-headers: #配置禁止使用的头信息，治这里设置为null,否则set-cookie无效
+leyou:
+  jwt:
+    pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pub # 公钥地址
+    cookieName: LY_TOKEN # cookie的名称
+  filter:
+    allowPaths:
+      - /api/auth
+      - /api/search
+      - /api/user/register
+      - /api/user/check
+      - /api/user/code
+      - /api/item
