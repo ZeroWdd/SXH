@@ -18,7 +18,6 @@
         <module>leyou-sms</module>
         <module>leyou-user</module>
         <module>leyou-auth</module>
-        <module>leyou-test</module>
         <module>leyou-cart</module>
         <module>leyou-order</module>
     </modules>
