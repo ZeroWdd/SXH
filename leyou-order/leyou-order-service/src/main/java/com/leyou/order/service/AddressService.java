@@ -1,12 +1,17 @@
 package com.leyou.order.service;
 
+import com.leyou.auth.entity.UserInfo;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
+import com.leyou.order.interceptor.LoginInterceptor;
 import com.leyou.order.mapper.AddressMapper;
 import com.leyou.order.pojo.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Auther: wdd
@@ -46,18 +51,21 @@ public class AddressService {
 
     }
 
-    public Address queryAddress(Long addressId) {
-        Address address = null;
+    public List<Address> queryAddressByUserId() {
+        UserInfo userInfo = LoginInterceptor.getLoginUser();
+        List<Address> addressList = new ArrayList<>();
         try {
-            address = addressMapper.selectByPrimaryKey(addressId);
-            if(StringUtils.isEmpty(address)){
+            Address address = new Address();
+            address.setUserId(userInfo.getId());
+            addressList = addressMapper.select(address);
+            if(CollectionUtils.isEmpty(addressList)){
                 throw new LyException(ExceptionEnum.ADDRESS_NOT_FOUND);
             }
         } catch (LyException e) {
             e.printStackTrace();
             throw new LyException(ExceptionEnum.ADDRESS_NOT_FOUND);
         }
-        return address;
+        return addressList;
 
     }
 

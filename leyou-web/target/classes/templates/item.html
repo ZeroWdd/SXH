@@ -104,12 +104,12 @@
 			<div class="crumb-wrap">
 				<ul class="sui-breadcrumb">
 					<li th:each="category : ${categories}">
-						<a href="#" th:text="${category.name}">手机</a>
+						<a href="#" th:text="${category.name}"></a>
 					</li>
 					<li>
-						<a href="#" th:text="${brand.name}">Apple</a>
+						<a href="#" th:text="${brand.name}"></a>
 					</li>
-					<li class="active" th:text="${spu.title}">Apple iPhone 6s</li>
+					<li class="active" th:text="${spu.title}"></li>
 				</ul>
 			</div>
 			<!--product-info-->
@@ -599,7 +599,7 @@
 <script src="/js/vue/vue.js"></script>
 <script src="/js/axios.min.js"></script>
 <script src="/js/common.js"></script>
-<script type="text/javascript" src="js/plugins/iview/iview.min.js"></script>
+<script src="https://unpkg.com/view-design/dist/iview.min.js"></script>
 <script th:inline="javascript">
 	const skus = /*[[${skus}]]*/ [];
 	const paramMap = /*[[${paramMap}]]*/ [];
@@ -662,8 +662,10 @@
 					}
 					// 把carts写回localstorage
 					ly.store.set("carts", carts);
+
+					this.$Message.success("添加至购物车");
 					// 跳转
-					window.location.href = "http://www.leyou.com/cart.html";
+					//window.location.href = "http://www.leyou.com/cart.html";
 				})
 			}
 		},

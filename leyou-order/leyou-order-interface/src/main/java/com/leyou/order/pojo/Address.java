@@ -19,6 +19,7 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long addressId;
+    private Long userId;
     private String receiver; // 收货人全名
     private String receiverMobile; // 移动电话
     private String receiverState; // 省份
@@ -26,4 +27,5 @@ public class Address {
     private String receiverDistrict; // 区/县
     private String receiverAddress; // 收货地址，如：xx路xx号
     private String receiverZip; // 邮政编码,如：310001
+    private String receiverDefault; // 默认地址 1为默认地址 0为非默认地址
 }

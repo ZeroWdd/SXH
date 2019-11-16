@@ -1,6 +1,5 @@
 package com.leyou.order.controller;
 
-import com.leyou.common.util.IdWorker;
 import com.leyou.order.pojo.Address;
 import com.leyou.order.service.AddressService;
 import io.swagger.annotations.Api;
@@ -9,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Auther: wdd
@@ -21,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class AddressController {
     @Autowired
     private AddressService addressService;
-    @Autowired
-    private IdWorker idWorker;
 
     @PostMapping("")
     @ApiOperation("新增地址")
@@ -38,11 +37,11 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/{addressId}")
-    @ApiOperation("根据地址id查询地址")
-    public ResponseEntity<Address> queryAddress(@PathVariable Long addressId){
-        Address address = addressService.queryAddress(addressId);
-        return ResponseEntity.ok(address);
+    @GetMapping("")
+    @ApiOperation("根据用户id查询地址")
+    public ResponseEntity<List<Address>> queryAddress(){
+        List<Address> addressList = addressService.queryAddressByUserId();
+        return ResponseEntity.ok(addressList);
     }
 
     @DeleteMapping("/{addressId}")
