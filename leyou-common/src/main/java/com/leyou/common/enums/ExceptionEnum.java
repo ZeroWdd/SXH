@@ -35,6 +35,7 @@ public enum ExceptionEnum {
     ADDRESS_UPDATE_ERROR(500,"地址修改失败"),
     ADDRESS_DELETE_ERROR(500,"地址删除失败"),
     ORDER_SAVE_ERROR(500,"订单添加失败"),
+    ORDER_UPDATE_ERROR(500,"订单修改失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
 
@@ -42,6 +43,7 @@ public enum ExceptionEnum {
     INVALID_VERIFY_CODE(400,"无效的验证码"),
     USERNAME_OR_PASSWORD_ERROR(400,"用户名或密码错误"),
     INVALID_TOKEN(400,"无效的用户凭证"),
+    INVALID_ORDER_TYPE(400,"无效的订单状态"),
     ;
     private int code;
     private String msg;

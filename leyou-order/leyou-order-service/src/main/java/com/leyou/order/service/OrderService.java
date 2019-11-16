@@ -125,4 +125,34 @@ public class OrderService {
         }
         return order;
     }
+
+    public void updateStatus(Long id, Integer status) {
+        OrderStatus record = new OrderStatus();
+        record.setOrderId(id);
+        record.setStatus(status);
+        // 根据状态判断要修改的时间
+        switch (status) {
+            case 2:
+                record.setPaymentTime(new Date());// 付款
+                break;
+            case 3:
+                record.setConsignTime(new Date());// 发货
+                break;
+            case 4:
+                record.setEndTime(new Date());// 确认收获，订单结束
+                break;
+            case 5:
+                record.setCloseTime(new Date());// 交易失败，订单关闭
+                break;
+            case 6:
+                record.setCommentTime(new Date());// 评价时间
+                break;
+            default:
+                throw new LyException(ExceptionEnum.INVALID_ORDER_TYPE);
+        }
+        int count = orderStatusMapper.updateByPrimaryKeySelective(record);
+        if(count != 1){
+            throw new LyException(ExceptionEnum.ORDER_UPDATE_ERROR);
+        }
+    }
 }
