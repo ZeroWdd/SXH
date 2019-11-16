@@ -1,5 +1,9 @@
 package com.leyou.order.pojo;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.leyou.common.util.LongJsonDeserializer;
+import com.leyou.common.util.LongJsonSerializer;
 import com.sun.istack.internal.NotNull;
 import lombok.Data;
 
@@ -14,6 +18,8 @@ import java.util.List;
 public class Order {
 
     @Id
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
     private Long orderId;// id
     @NotNull
     private Long totalPay;// 总金额
@@ -38,6 +44,7 @@ public class Order {
     private String receiverDistrict; // 区/县
     private String receiverAddress; // 收货地址，如：xx路xx号
     private String receiverZip; // 邮政编码,如：310001
+    private Long addressId; //地址id
     private Integer invoiceType;// 发票类型，0无发票，1普通发票，2电子发票，3增值税发票
     private Integer sourceType;// 订单来源 1:app端，2：pc端，3：M端，4：微信端，5：手机qq端
 
@@ -45,6 +52,6 @@ public class Order {
     private List<OrderDetail> orderDetails;
 
     @Transient
-    private Integer status;
+    private Integer status;  //状态：1、未付款 2、已付款,未发货 3、已发货,未确认 4、交易成功 5、交易关闭 6、已评价
 
 }

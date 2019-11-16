@@ -22,7 +22,8 @@ public enum ExceptionEnum {
     GOODS_SKU_NOT_FOUND(404,"商品SKU未查到"),
     STOCK_NOT_FOUND(404,"库存未查到"),
     CART_NOT_FOUND(404,"购物车为空"),
-    ADDRESS_NOT_FOUND(404,"地址为查询到"),
+    ADDRESS_NOT_FOUND(404,"地址未查询到"),
+    ORDER_NOT_FOUND(404,"订单未查询到"),
 
     BRAND_SAVE_ERROR(500,"品牌新增失败"),
     BRAND_UPDATE_ERROR(500,"品牌修改失败"),
@@ -33,6 +34,7 @@ public enum ExceptionEnum {
     ADDRESS_SAVE_ERROR(500,"地址新增失败"),
     ADDRESS_UPDATE_ERROR(500,"地址修改失败"),
     ADDRESS_DELETE_ERROR(500,"地址删除失败"),
+    ORDER_SAVE_ERROR(500,"订单添加失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
 

@@ -32,6 +32,9 @@ zuul:
     cart-service:
       path: /cart/**
       serviceId: cart-service
+    order-service:
+      path: /order/**
+      serviceId: order-service
   add-host-header: true # 携带请求头本身的head头信息
   sensitive-headers: #配置禁止使用的头信息，治这里设置为null,否则set-cookie无效
 leyou:

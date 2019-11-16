@@ -1,5 +1,9 @@
 package com.leyou.order.pojo;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.leyou.common.util.LongJsonDeserializer;
+import com.leyou.common.util.LongJsonSerializer;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -11,6 +15,8 @@ import java.util.Date;
 public class OrderStatus {
 
     @Id
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
     private Long orderId;
     /**
      * 初始阶段：1、未付款、未发货；初始化所有数据

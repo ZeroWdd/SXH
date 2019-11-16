@@ -2,8 +2,8 @@ package com.leyou.filter;
 
 import com.leyou.auth.util.JwtUtils;
 import com.leyou.common.util.CookieUtils;
-import com.leyou.order.config.FilterProperties;
-import com.leyou.order.config.JwtGatewayProperties;
+import com.leyou.config.FilterProperties;
+import com.leyou.config.JwtGatewayProperties;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;

@@ -24,6 +24,11 @@
             <version>5.0.6.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.leyou.common</groupId>
+            <artifactId>leyou-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

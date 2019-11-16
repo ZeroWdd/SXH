@@ -1,5 +1,6 @@
 package com.leyou.order.pojo;
 
+
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;

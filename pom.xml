@@ -20,6 +20,7 @@
         <module>leyou-auth</module>
         <module>leyou-cart</module>
         <module>leyou-order</module>
+        <module>leyou-stock</module>
     </modules>
     <packaging>pom</packaging>
 

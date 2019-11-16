@@ -1,7 +1,7 @@
 package com.leyou.search;
 
 import com.leyou.LeyouSearchApplication;
-import com.leyou.pojo.Item;
+import com.leyou.cart.pojo.Item;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

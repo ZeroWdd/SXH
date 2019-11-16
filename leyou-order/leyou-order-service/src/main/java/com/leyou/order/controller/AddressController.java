@@ -1,5 +1,6 @@
 package com.leyou.order.controller;
 
+import com.leyou.common.util.IdWorker;
 import com.leyou.order.pojo.Address;
 import com.leyou.order.service.AddressService;
 import io.swagger.annotations.Api;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 public class AddressController {
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private IdWorker idWorker;
 
     @PostMapping("")
     @ApiOperation("新增地址")
@@ -48,4 +51,5 @@ public class AddressController {
         addressService.deleteAddress(addressId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 }

@@ -1,5 +1,9 @@
 package com.leyou.order.pojo;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.leyou.common.util.LongJsonDeserializer;
+import com.leyou.common.util.LongJsonSerializer;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;
@@ -15,6 +19,8 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonDeserialize(using = LongJsonDeserializer.class)
+    @JsonSerialize(using = LongJsonSerializer.class)
     private Long orderId;// 订单id
 
     private Long skuId;// 商品id

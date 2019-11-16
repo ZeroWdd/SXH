@@ -1,7 +1,6 @@
-package com.leyou.order.config;
+package com.leyou.cart.config;
 
-import com.leyou.common.util.IdWorker;
-import com.leyou.order.interceptor.LoginInterceptor;
+import com.leyou.cart.interceptor.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -21,14 +20,8 @@ public class MvcConfig implements WebMvcConfigurer {
         return new LoginInterceptor(jwtProperties);
     }
 
-    @Bean
-    public IdWorker idWorker(){
-        return new IdWorker();
-    }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor())
-                .addPathPatterns("/**");
+        registry.addInterceptor(loginInterceptor()).addPathPatterns("/**");
     }
 }
