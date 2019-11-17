@@ -1,8 +1,8 @@
 server:
-  port: 8089
+  port: 8090
 spring:
   application:
-    name: order-service
+    name: stock-service
   datasource:
     url: jdbc:mysql://192.168.159.132:3306/leyou?characterEncoding=utf-8
     username: root
@@ -28,7 +28,7 @@ eureka:
     lease-renewal-interval-in-seconds: 5 # 5秒钟发送一次心跳
     lease-expiration-duration-in-seconds: 10 # 10秒不发送就过期
 mybatis:
-  type-aliases-package: com.leyou.order.pojo
+  type-aliases-package: com.leyou.stock.pojo
 leyou:
   jwt:
     pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pub # 公钥地址

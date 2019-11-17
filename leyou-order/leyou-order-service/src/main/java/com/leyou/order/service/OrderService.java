@@ -4,6 +4,7 @@ import com.leyou.auth.entity.UserInfo;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
 import com.leyou.common.util.IdWorker;
+import com.leyou.order.client.StockClient;
 import com.leyou.order.interceptor.LoginInterceptor;
 import com.leyou.order.mapper.OrderDetailMapper;
 import com.leyou.order.mapper.OrderMapper;
@@ -38,6 +39,8 @@ public class OrderService {
     private OrderDetailMapper orderDetailMapper;
     @Autowired
     private StringRedisTemplate redisTemplate;
+    @Autowired
+    private StockClient stockClient;
 
     @Autowired
     private IdWorker idWorker;
@@ -84,6 +87,7 @@ public class OrderService {
             }
 
             //更新库存
+            order.getOrderDetails().forEach(od -> stockClient.decreaseStock(od.getSkuId(),od.getNum()));
 
             //删除购物车数据 redis
             String key = KEY_PREFIX + userInfo.getId();
