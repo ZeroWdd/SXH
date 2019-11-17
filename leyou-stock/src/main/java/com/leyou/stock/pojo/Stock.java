@@ -1,4 +1,4 @@
-package com.leyou.pojo;
+package com.leyou.stock.pojo;
 
 import lombok.Data;
 

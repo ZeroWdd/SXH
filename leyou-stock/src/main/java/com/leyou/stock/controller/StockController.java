@@ -1,6 +1,6 @@
-package com.leyou.controller;
+package com.leyou.stock.controller;
 
-import com.leyou.service.StockService;
+import com.leyou.stock.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;

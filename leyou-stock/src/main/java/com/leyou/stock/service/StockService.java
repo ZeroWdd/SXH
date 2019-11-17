@@ -1,8 +1,8 @@
-package com.leyou.service;
+package com.leyou.stock.service;
 
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
-import com.leyou.mapper.StockMapper;
+import com.leyou.stock.mapper.StockMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

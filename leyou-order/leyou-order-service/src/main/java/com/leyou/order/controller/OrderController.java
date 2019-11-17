@@ -38,13 +38,12 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
-    @PutMapping("{id}/{status}")
+    @PutMapping("/{id}/{status}")
     @ApiOperation(value = "更新订单状态", notes = "更新订单状态")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "订单编号", type = "Long"),
             @ApiImplicitParam(name = "status", value = "订单状态：1未付款，2已付款未发货，3已发货未确认，4已确认未评价，5交易关闭，6交易成功，已评价", type = "Integer"),
     })
-
     @ApiResponses({
             @ApiResponse(code = 204, message = "修改状态成功"),
             @ApiResponse(code = 400, message = "请求参数有误"),

@@ -1,6 +1,6 @@
 package com.leyou.order.client;
 
-import com.leyou.api.StockApi;
+import com.leyou.stock.api.StockApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**

@@ -1,4 +1,4 @@
-package com.leyou.api;
+package com.leyou.stock.api;
 
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;

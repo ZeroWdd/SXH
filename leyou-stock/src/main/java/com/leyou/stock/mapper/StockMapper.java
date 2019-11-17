@@ -1,6 +1,6 @@
-package com.leyou.mapper;
+package com.leyou.stock.mapper;
 
-import com.leyou.pojo.Stock;
+import com.leyou.stock.pojo.Stock;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 import tk.mybatis.mapper.common.Mapper;
