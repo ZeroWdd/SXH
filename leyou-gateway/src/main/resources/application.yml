@@ -48,7 +48,8 @@ leyou:
     allowPaths:
       - /api/auth
       - /api/search
-      - /api/user/register
-      - /api/user/check
-      - /api/user/code
+#      - /api/user/register
+#      - /api/user/check
+#      - /api/user/code
+      - /api/user
       - /api/item

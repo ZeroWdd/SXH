@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public enum ExceptionEnum {
     BRAND_NOT_FOUND(404,"品牌未查到"),
+    USER_NOT_FOUND(404,"用户未查到"),
     CATEGORY_NOT_FOUND(404,"分类未查到"),
     SPEC_GROUP_NOT_FOUND(404,"商品规格组未查到"),
     SPEC_PARAM_NOT_FOUND(404,"商品规格参数未查到"),
@@ -44,6 +45,7 @@ public enum ExceptionEnum {
     SPEC_PARAM_SAVE_ERROR(500,"规格参数新增失败"),
     SPEC_PARAM_UPDATE_ERROR(500,"规格参数修改失败"),
     SPEC_PARAM_DELETE_ERROR(500,"规格参数删除失败"),
+    USER_DELETE_ERROR(500,"用户删除失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
 

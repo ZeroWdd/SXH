@@ -1,19 +1,26 @@
 package com.leyou.user.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
+import com.leyou.common.pojo.PageResult;
 import com.leyou.common.util.CodecUtils;
 import com.leyou.common.util.NumberUtils;
 import com.leyou.user.mapper.UserMapper;
 import com.leyou.user.pojo.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -89,5 +96,40 @@ public class UserService {
             throw new LyException(ExceptionEnum.USERNAME_OR_PASSWORD_ERROR);
         }
         return one;
+    }
+
+    public PageResult<User> queryUsersByPage(String key, Integer page, Integer rows, String sortBy, Boolean desc) {
+        // 初始化example对象
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        // 根据name模糊查询，或者根据电话模糊查询
+        if (StringUtils.isNotBlank(key)) {
+            criteria.andLike("username", "%" + key + "%").orLike("phone","%" + key + "%");
+        }
+
+        // 添加分页条件
+        PageHelper.startPage(page, rows);
+
+        // 添加排序条件
+        if (StringUtils.isNotBlank(sortBy)) {
+            example.setOrderByClause(sortBy + " " + (desc ? "desc" : "asc"));
+        }
+
+        List<User> users = userMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(users)){
+            throw new LyException(ExceptionEnum.USER_NOT_FOUND);
+        }
+        // 包装成pageInfo
+        PageInfo<User> pageInfo = new PageInfo<>(users);
+        // 包装成分页结果集返回
+        return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    public void deleteUser(Long id) {
+        int count = userMapper.deleteByPrimaryKey(id);
+        if(count != 1){
+            throw new LyException(ExceptionEnum.USER_DELETE_ERROR);
+        }
     }
 }

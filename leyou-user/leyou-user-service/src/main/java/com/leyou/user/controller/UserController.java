@@ -1,7 +1,9 @@
 package com.leyou.user.controller;
 
+import com.leyou.common.pojo.PageResult;
 import com.leyou.user.pojo.User;
 import com.leyou.user.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,5 +67,24 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+
+    @ApiOperation(value = "条件分页查询用户")
+    @GetMapping("/page")
+    public ResponseEntity<PageResult<User>> queryUsersByPage(
+            @RequestParam(value = "key", required = false)String key,
+            @RequestParam(value = "page", defaultValue = "1")Integer page,
+            @RequestParam(value = "rows", defaultValue = "10")Integer rows,
+            @RequestParam(value = "sortBy", required = false)String sortBy,
+            @RequestParam(value = "desc", required = false)Boolean desc){
+        PageResult<User> result = userService.queryUsersByPage(key, page, rows, sortBy, desc);
+        return ResponseEntity.ok(result);
+    }
+
+    @ApiOperation(value = "根据id删除用户")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
+        userService.deleteUser(id);
+        return ResponseEntity.ok().build();
+    }
 
 }

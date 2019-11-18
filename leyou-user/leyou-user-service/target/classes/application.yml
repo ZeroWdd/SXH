@@ -4,13 +4,13 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:mysql://192.168.159.133:3306/leyou?characterEncoding=utf-8
+    url: jdbc:mysql://192.168.159.134:3306/leyou?characterEncoding=utf-8
     username: root
     password: root
   redis:
-    host: 192.168.159.133
+    host: 192.168.159.134
   rabbitmq:
-    host: 192.168.159.133
+    host: 192.168.159.134
     username: guest
     password: guest
     virtual-host: /
