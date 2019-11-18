@@ -38,6 +38,9 @@ public enum ExceptionEnum {
     ORDER_UPDATE_ERROR(500,"订单修改失败"),
     STOCK_DECREASE_ERROR(500,"库存减少失败"),
     STOCK_LACK_ERROR(500,"库存不足"),
+    SPEC_GROUP_SAVE_ERROR(500,"规格组新增失败"),
+    SPEC_GROUP_DELETE_ERROR(500,"规格组删除失败"),
+    SPEC_GROUP_UPDATE_ERROR(500,"规格组修改失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
 

@@ -44,7 +44,28 @@ public class SpecificationController {
     @ApiOperation(value = "查询规格组及组内参数")
     @GetMapping("{cid}")
     public ResponseEntity<List<SpecGroup>> querySpecsByCid(@PathVariable("cid") Long cid){
-        List<SpecGroup> list = this.specificationService.querySpecsByCid(cid);
+        List<SpecGroup> list = specificationService.querySpecsByCid(cid);
         return ResponseEntity.ok(list);
+    }
+
+    @ApiOperation(value = "新增规格组返回id")
+    @PostMapping("/group")
+    public ResponseEntity<String> addSpecGroup(@RequestBody SpecGroup specGroup){
+        Long specGroupId = specificationService.addSpecGroup(specGroup);
+        return ResponseEntity.ok(specGroupId + "");
+    }
+
+    @ApiOperation(value = "删除规格组")
+    @DeleteMapping("/group/{id}")
+    public ResponseEntity<Void> deleteSpecGroup(@PathVariable("id") Long id){
+        specificationService.deleteSpecGroup(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "修改规格组")
+    @PutMapping("/group")
+    public ResponseEntity<Void> deleteSpecGroup(@RequestBody SpecGroup specGroup){
+        specificationService.updateSpecGroup(specGroup);
+        return ResponseEntity.ok().build();
     }
 }

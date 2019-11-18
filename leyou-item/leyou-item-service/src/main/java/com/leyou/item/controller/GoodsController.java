@@ -80,5 +80,12 @@ public class GoodsController {
         return ResponseEntity.ok(sku);
     }
 
+    @ApiOperation(value = "根据id更改上架或下架")
+    @PutMapping("/spu/shelf")
+    public ResponseEntity<Void> updateSkuShelfById(@RequestBody Spu spu){
+        goodsService.updateSkuShelf(spu);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 
 }

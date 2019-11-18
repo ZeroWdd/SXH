@@ -60,12 +60,14 @@ public class BrandController {
         return ResponseEntity.ok(brand);
     }
 
+    @ApiOperation(value = "根据ids更改品牌")
     @PutMapping("")
     public ResponseEntity<Void> updateBrand(Brand brand, @RequestParam("cids") List<Long> cids){
         brandService.updateBrand(brand,cids);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @ApiOperation(value = "根据id删除品牌")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBrand(@PathVariable("id")Long id){
         brandService.deleteBrand(id);

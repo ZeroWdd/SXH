@@ -238,4 +238,8 @@ public class GoodsService {
     public Sku querySkuById(Long id) {
         return skuMapper.selectByPrimaryKey(id);
     }
+
+    public void updateSkuShelf(Spu spu) {
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
 }

@@ -49,11 +49,35 @@ public class SpecificationService {
 
     public List<SpecGroup> querySpecsByCid(Long cid) {
         // 查询规格组
-        List<SpecGroup> groups = this.queryGroupsByCid(cid);
+        List<SpecGroup> groups = queryGroupsByCid(cid);
         groups.forEach(g -> {
             // 查询组内参数
             g.setParams(this.queryParamsList(g.getId(), null, null,null));
         });
         return groups;
+    }
+
+    public Long addSpecGroup(SpecGroup specGroup) {
+        int count = specGroupMapper.insertSelective(specGroup);
+        if(count != 1){
+            throw new LyException(ExceptionEnum.SPEC_GROUP_SAVE_ERROR);
+        }
+        return new Long(specGroup.getId());
+
+    }
+
+    public void deleteSpecGroup(Long id) {
+        int count = specGroupMapper.deleteByPrimaryKey(id);
+        if(count != 1){
+            throw new LyException(ExceptionEnum.SPEC_GROUP_DELETE_ERROR);
+        }
+    }
+
+
+    public void updateSpecGroup(SpecGroup specGroup) {
+        int count = specGroupMapper.updateByPrimaryKeySelective(specGroup);
+        if(count != 1){
+            throw new LyException(ExceptionEnum.SPEC_GROUP_UPDATE_ERROR);
+        }
     }
 }
