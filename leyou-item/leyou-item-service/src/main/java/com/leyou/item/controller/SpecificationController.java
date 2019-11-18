@@ -64,8 +64,29 @@ public class SpecificationController {
 
     @ApiOperation(value = "修改规格组")
     @PutMapping("/group")
-    public ResponseEntity<Void> deleteSpecGroup(@RequestBody SpecGroup specGroup){
+    public ResponseEntity<Void> updateSpecGroup(@RequestBody SpecGroup specGroup){
         specificationService.updateSpecGroup(specGroup);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "新增规格参数返回id")
+    @PostMapping("/param")
+    public ResponseEntity<String> addSpecParam(@RequestBody SpecParam specParam){
+        Long specParamId = specificationService.addSpecParam(specParam);
+        return ResponseEntity.ok(specParamId + "");
+    }
+
+    @ApiOperation(value = "修改规格参数")
+    @PutMapping("/param")
+    public ResponseEntity<Void> updateSpecParam(@RequestBody SpecParam specParam){
+        specificationService.updateSpecParam(specParam);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "删除规格参数")
+    @DeleteMapping("/param/{id}")
+    public ResponseEntity<Void> deleteSpecParam(@PathVariable("id") Long id){
+        specificationService.deleteSpecParam(id);
         return ResponseEntity.ok().build();
     }
 }

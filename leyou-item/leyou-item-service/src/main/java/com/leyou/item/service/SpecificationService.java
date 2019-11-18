@@ -80,4 +80,26 @@ public class SpecificationService {
             throw new LyException(ExceptionEnum.SPEC_GROUP_UPDATE_ERROR);
         }
     }
+
+    public Long addSpecParam(SpecParam specParam) {
+        int count = specParamMapper.insertSelective(specParam);
+        if(count != 1){
+            throw new LyException(ExceptionEnum.SPEC_PARAM_SAVE_ERROR);
+        }
+        return new Long(specParam.getId());
+    }
+
+    public void updateSpecParam(SpecParam specParam) {
+        int count = specParamMapper.updateByPrimaryKeySelective(specParam);
+        if(count != 1){
+            throw new LyException(ExceptionEnum.SPEC_PARAM_UPDATE_ERROR);
+        }
+    }
+
+    public void deleteSpecParam(Long id) {
+        int count = specParamMapper.deleteByPrimaryKey(id);
+        if(count != 1){
+            throw new LyException(ExceptionEnum.SPEC_PARAM_DELETE_ERROR);
+        }
+    }
 }
