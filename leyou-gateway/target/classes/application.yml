@@ -38,6 +38,9 @@ zuul:
     stock-service:
       path: /stock/**
       serviceId: stock-service
+    admin-service:
+      path: /admin/**
+      serviceId: admin-service
   add-host-header: true # 携带请求头本身的head头信息
   sensitive-headers: #配置禁止使用的头信息，治这里设置为null,否则set-cookie无效
 leyou:
@@ -51,5 +54,6 @@ leyou:
 #      - /api/user/register
 #      - /api/user/check
 #      - /api/user/code
-      - /api/user
+      - /api/user    # 测试用
       - /api/item
+      - /api/admin   # 测试用

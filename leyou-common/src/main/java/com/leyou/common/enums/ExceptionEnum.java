@@ -25,6 +25,7 @@ public enum ExceptionEnum {
     CART_NOT_FOUND(404,"购物车为空"),
     ADDRESS_NOT_FOUND(404,"地址未查询到"),
     ORDER_NOT_FOUND(404,"订单未查询到"),
+    ADMIN_NOT_FOUND(404,"管理员未查询到"),
 
     BRAND_SAVE_ERROR(500,"品牌新增失败"),
     BRAND_UPDATE_ERROR(500,"品牌修改失败"),
@@ -46,6 +47,9 @@ public enum ExceptionEnum {
     SPEC_PARAM_UPDATE_ERROR(500,"规格参数修改失败"),
     SPEC_PARAM_DELETE_ERROR(500,"规格参数删除失败"),
     USER_DELETE_ERROR(500,"用户删除失败"),
+    ADMIN_SAVE_ERROR(500,"管理员添加失败"),
+    ADMIN_DELETE_ERROR(500,"管理员删除失败"),
+    ADMIN_UPDATE_ERROR(500,"管理员修改失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
 
