@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 /**
  * @Auther: wdd
@@ -33,4 +31,6 @@ public class Admin {
     @JsonIgnore
     private String salt; // 盐
 
+    @Transient
+    private List<Role> roles;// 拥有的角色
 }

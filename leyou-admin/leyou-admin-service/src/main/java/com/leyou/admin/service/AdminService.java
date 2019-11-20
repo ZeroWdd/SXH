@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.base.CaseFormat;
 import com.leyou.admin.mapper.AdminMapper;
 import com.leyou.admin.pojo.Admin;
+import com.leyou.admin.pojo.Role;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
 import com.leyou.common.pojo.PageResult;
@@ -101,9 +102,11 @@ public class AdminService {
 
     public Admin selectAdmin(Long id) {
         Admin admin = adminMapper.selectByPrimaryKey(id);
+        List<Role> roles = adminMapper.queryRolesByAdminId(id);
         if(org.springframework.util.StringUtils.isEmpty(admin)){
             throw new LyException(ExceptionEnum.ADMIN_NOT_FOUND);
         }
+        admin.setRoles(roles);
         return admin;
     }
 }

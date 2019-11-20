@@ -26,6 +26,7 @@ public enum ExceptionEnum {
     ADDRESS_NOT_FOUND(404,"地址未查询到"),
     ORDER_NOT_FOUND(404,"订单未查询到"),
     ADMIN_NOT_FOUND(404,"管理员未查询到"),
+    ROLE_NOT_FOUND(404,"角色未查询到"),
 
     BRAND_SAVE_ERROR(500,"品牌新增失败"),
     BRAND_UPDATE_ERROR(500,"品牌修改失败"),
@@ -50,6 +51,9 @@ public enum ExceptionEnum {
     ADMIN_SAVE_ERROR(500,"管理员添加失败"),
     ADMIN_DELETE_ERROR(500,"管理员删除失败"),
     ADMIN_UPDATE_ERROR(500,"管理员修改失败"),
+    ROLE_SAVE_ERROR(500,"角色保存失败"),
+    ROLE_UPDATE_ERROR(500,"角色修改失败"),
+    ROLE_DELETE_ERROR(500,"角色删除失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
 
