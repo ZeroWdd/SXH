@@ -54,6 +54,7 @@ public enum ExceptionEnum {
     ROLE_SAVE_ERROR(500,"角色保存失败"),
     ROLE_UPDATE_ERROR(500,"角色修改失败"),
     ROLE_DELETE_ERROR(500,"角色删除失败"),
+    ADMIN_DEAL_ROLE_ERROR(500,"管理员分配角色失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
 

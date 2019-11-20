@@ -13,6 +13,7 @@ import com.leyou.common.util.CodecUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -108,5 +109,20 @@ public class AdminService {
         }
         admin.setRoles(roles);
         return admin;
+    }
+
+    @Transactional
+    public void dealAdminRole(Admin admin) {
+        //先将原有的分配角色删除
+        adminMapper.deleteAdminRoleByAdminId(admin.getAdminId());
+        //重新分配角色
+        int count = 0;
+        for(Role role : admin.getRoles()) {
+            count = adminMapper.insertAdminRole(admin.getAdminId(),role.getRoleId());
+            if(count != 1){
+                throw new LyException(ExceptionEnum.ADMIN_NOT_FOUND);
+            }
+        }
+
     }
 }

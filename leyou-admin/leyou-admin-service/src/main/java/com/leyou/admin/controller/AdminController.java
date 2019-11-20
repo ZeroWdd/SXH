@@ -74,4 +74,10 @@ public class AdminController {
         PageResult<Admin> result = adminService.queryAdminsByPage(key, page, rows, sortBy, desc);
         return ResponseEntity.ok(result);
     }
+
+    @PutMapping("/deal")
+    public ResponseEntity<Void> dealAdminRole(@RequestBody Admin admin) {
+        adminService.dealAdminRole(admin);
+        return ResponseEntity.ok().build();
+    }
 }
