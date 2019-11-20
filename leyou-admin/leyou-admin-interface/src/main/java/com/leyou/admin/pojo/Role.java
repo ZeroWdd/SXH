@@ -1,7 +1,11 @@
 package com.leyou.admin.pojo;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -12,6 +16,9 @@ import javax.persistence.Table;
 @Data
 @Table(name = "tb_role")
 public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roleId;
+    @Length(min = 2, max = 10, message = "角色名只能在2~10位之间")
     private String roleName;
 }
