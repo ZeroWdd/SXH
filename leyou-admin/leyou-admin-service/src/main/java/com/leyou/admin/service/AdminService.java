@@ -103,6 +103,7 @@ public class AdminService {
 
     public Admin selectAdmin(Long id) {
         Admin admin = adminMapper.selectByPrimaryKey(id);
+        //根据AdminId查询管理员角色中间表 即该管理员拥有的角色
         List<Role> roles = adminMapper.queryRolesByAdminId(id);
         if(org.springframework.util.StringUtils.isEmpty(admin)){
             throw new LyException(ExceptionEnum.ADMIN_NOT_FOUND);

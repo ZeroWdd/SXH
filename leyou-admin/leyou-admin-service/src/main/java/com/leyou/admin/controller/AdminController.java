@@ -75,6 +75,7 @@ public class AdminController {
         return ResponseEntity.ok(result);
     }
 
+    @ApiOperation(value = "给管理员分配角色")
     @PutMapping("/deal")
     public ResponseEntity<Void> dealAdminRole(@RequestBody Admin admin) {
         adminService.dealAdminRole(admin);

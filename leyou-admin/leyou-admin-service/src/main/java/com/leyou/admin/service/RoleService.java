@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.CaseFormat;
 import com.leyou.admin.mapper.RoleMapper;
+import com.leyou.admin.pojo.Permission;
 import com.leyou.admin.pojo.Role;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
@@ -11,6 +12,7 @@ import com.leyou.common.pojo.PageResult;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -79,9 +81,11 @@ public class RoleService {
 
     public Role selectRole(Long id) {
         Role role = roleMapper.selectByPrimaryKey(id);
+        List<Permission> permissions = roleMapper.queryPermissionsByRoleId(id);
         if(org.springframework.util.StringUtils.isEmpty(role)){
             throw new LyException(ExceptionEnum.ROLE_NOT_FOUND);
         }
+        role.setPermissions(permissions);
         return role;
     }
 
@@ -91,5 +95,19 @@ public class RoleService {
             throw new LyException(ExceptionEnum.ROLE_NOT_FOUND);
         }
         return roles;
+    }
+
+    @Transactional
+    public void dealRolePermission(Role role) {
+        //先将原有的分配权限删除
+        roleMapper.deleteRolePermissionByRoleId(role.getRoleId());
+        //重新分配角色
+        int count = 0;
+        for(Permission permission : role.getPermissions()) {
+            count = roleMapper.insertRolePermission(role.getRoleId(),permission.getPermissionId());
+            if(count != 1){
+                throw new LyException(ExceptionEnum.ADMIN_NOT_FOUND);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * @Auther: wdd
@@ -21,4 +22,6 @@ public class Role {
     private Long roleId;
     @Length(min = 2, max = 10, message = "角色名只能在2~10位之间")
     private String roleName;
+
+    private List<Permission> permissions;
 }

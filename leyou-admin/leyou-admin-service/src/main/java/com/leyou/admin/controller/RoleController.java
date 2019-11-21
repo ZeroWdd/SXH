@@ -1,5 +1,6 @@
 package com.leyou.admin.controller;
 
+import com.leyou.admin.pojo.Admin;
 import com.leyou.admin.pojo.Role;
 import com.leyou.admin.service.RoleService;
 import com.leyou.common.pojo.PageResult;
@@ -70,6 +71,13 @@ public class RoleController {
     @PutMapping("")
     public ResponseEntity<Void> updateRole(@Valid Role role) {
         roleService.updateRole(role);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation("给角色分配信息")
+    @PutMapping("/deal")
+    public ResponseEntity<Void> dealRolePermission(@RequestBody Role role) {
+        roleService.dealRolePermission(role);
         return ResponseEntity.ok().build();
     }
 }
