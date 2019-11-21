@@ -65,9 +65,12 @@ public class RoleService {
 
     }
 
+    @Transactional
     public void deleteRole(Long id) {
-        // 先删除角色所拥有的权限(中间表)
+        // 先删除角色所拥有的权限(中间表tb_role_permission)
         roleMapper.deleteRolePermissionByRoleId(id);
+        // 再删除管理员所拥有的角色
+        roleMapper.deleteAdminRoleByRoleId(id);
         // 再删除角色
         int count = roleMapper.deleteByPrimaryKey(id);
         if(count != 1){

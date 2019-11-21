@@ -24,4 +24,7 @@ public interface RoleMapper extends Mapper<Role> {
 
     @Insert("insert into tb_role_permission(role_id,permission_id) values(#{roleId},#{permissionId})")
     int insertRolePermission(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
+
+    @Delete("delete from tb_admin_role where role_id = #{roleId}")
+    void deleteAdminRoleByRoleId(Long id);
 }
