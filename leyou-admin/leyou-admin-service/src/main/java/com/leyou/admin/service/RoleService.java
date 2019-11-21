@@ -66,6 +66,9 @@ public class RoleService {
     }
 
     public void deleteRole(Long id) {
+        // 先删除角色所拥有的权限(中间表)
+        roleMapper.deleteRolePermissionByRoleId(id);
+        // 再删除角色
         int count = roleMapper.deleteByPrimaryKey(id);
         if(count != 1){
             throw new LyException(ExceptionEnum.ROLE_DELETE_ERROR);

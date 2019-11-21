@@ -57,7 +57,11 @@ public class AdminService {
 
     }
 
+    @Transactional
     public void deleteAdmin(Long id) {
+        // 先删除管理员所拥有的角色(中间表)
+        adminMapper.deleteAdminRoleByAdminId(id);
+        // 再删除管理员
         int count = adminMapper.deleteByPrimaryKey(id);
         if(count != 1){
             throw new LyException(ExceptionEnum.ADMIN_DELETE_ERROR);
