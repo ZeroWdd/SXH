@@ -19,6 +19,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Auther: wdd
@@ -113,7 +114,7 @@ public class RoleService {
     public void dealRolePermission(Role role) {
         //先将原有的分配权限删除
         roleMapper.deleteRolePermissionByRoleId(role.getRoleId());
-        //重新分配角色
+        //重新给角色分配权限
         int count = 0;
         for(Permission permission : role.getPermissions()) {
             count = roleMapper.insertRolePermission(role.getRoleId(),permission.getPermissionId());
@@ -138,8 +139,8 @@ public class RoleService {
             if(CollectionUtils.isEmpty(uris)){
                 throw new LyException(ExceptionEnum.PERMISSION_NOT_FOUND);
             }
-            // 并放入缓存
-            redisTemplate.opsForValue().set(KEY_PREFIX + adminId,uris);
+            // 并放入缓存,设置过期时间300秒
+            redisTemplate.opsForValue().set(KEY_PREFIX + adminId,uris,300, TimeUnit.SECONDS);
         }
         return uris;
     }
