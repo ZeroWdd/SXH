@@ -11,11 +11,13 @@ import com.leyou.common.exception.LyException;
 import com.leyou.common.pojo.PageResult;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +29,10 @@ import java.util.List;
 public class RoleService {
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    static final String KEY_PREFIX = "leyou:admin:id:";
 
     public PageResult<Role> queryRolesByPage(String key, Integer page, Integer rows, String sortBy, Boolean desc) {
         Example example = new Example(Role.class);
@@ -115,5 +121,26 @@ public class RoleService {
                 throw new LyException(ExceptionEnum.ADMIN_NOT_FOUND);
             }
         }
+    }
+
+    /**
+     * 获取该角色拥有的uri，由于频繁读取，放入redis缓存
+     * @param adminId
+     * @return
+     */
+    public List<String> queryUri(Long adminId) {
+        List<String> uris = new ArrayList<>();
+        // 首先看看redis里有没有缓存
+        uris = (List<String>) redisTemplate.opsForValue().get(KEY_PREFIX + adminId);
+        if(CollectionUtils.isEmpty(uris)){
+            // 没有，则数据库查询
+            uris = roleMapper.queryUriByAdminId(adminId);
+            if(CollectionUtils.isEmpty(uris)){
+                throw new LyException(ExceptionEnum.PERMISSION_NOT_FOUND);
+            }
+            // 并放入缓存
+            redisTemplate.opsForValue().set(KEY_PREFIX + adminId,uris);
+        }
+        return uris;
     }
 }

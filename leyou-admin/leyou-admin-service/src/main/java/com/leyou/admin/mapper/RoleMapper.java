@@ -27,4 +27,13 @@ public interface RoleMapper extends Mapper<Role> {
 
     @Delete("delete from tb_admin_role where role_id = #{roleId}")
     void deleteAdminRoleByRoleId(Long id);
+
+    @Select("select url " +
+            "from tb_admin,tb_admin_role,tb_role,tb_role_permission,tb_permission " +
+            "where tb_admin.admin_id = tb_admin_role.admin_id " +
+            "and tb_admin_role.role_id = tb_role.role_id " +
+            "and tb_role.role_id = tb_role_permission.role_id " +
+            "and tb_role_permission.permission_id = tb_permission.permission_id " +
+            "and tb_admin.admin_id = #{adminId}")
+    List<String> queryUriByAdminId(@Param("adminId") Long adminId);
 }

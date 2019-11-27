@@ -26,6 +26,7 @@ public class PermissionService {
     @Autowired
     private PermissionMapper permissionMapper;
 
+
     public PageResult<Permission> queryPermissionsByPage(String key, Integer page, Integer rows, String sortBy, Boolean desc) {
         Example example = new Example(Permission.class);
         Example.Criteria criteria = example.createCriteria();
@@ -91,4 +92,6 @@ public class PermissionService {
         }
         return permissions;
     }
+
+
 }

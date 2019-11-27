@@ -18,6 +18,8 @@ spring:
     template:
       exchange: leyou.item.exchange
     publisher-confirms: true
+  redis:
+    host: 192.168.159.134
 eureka:
   client:
     service-url:
@@ -27,3 +29,7 @@ eureka:
     lease-expiration-duration-in-seconds: 10 # 10秒不发送就过期
 mybatis:
   type-aliases-package: com.leyou.admin.pojo
+leyou:
+  jwt:
+    pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pub # 公钥地址
+    cookieName: LY_TOKEN
