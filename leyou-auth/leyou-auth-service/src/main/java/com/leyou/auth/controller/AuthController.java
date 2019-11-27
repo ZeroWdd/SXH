@@ -32,7 +32,7 @@ public class AuthController {
 
 
     /**
-     * 登录授权
+     * 用户登录授权
      * @param username
      * @param password
      * @return
@@ -52,6 +52,31 @@ public class AuthController {
         CookieUtils.setCookie(request,response,prop.getCookieName(),token,prop.getCookieMaxAge(), null, true);
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * 管理员登录授权
+     * @param name
+     * @param password
+     * @param response
+     * @param request
+     * @return
+     */
+    @PostMapping("/admin/accredit")
+    public ResponseEntity<Void> adminAuthentication(
+            @RequestParam("name") String name,
+            @RequestParam("password") String password,
+            HttpServletResponse response,
+            HttpServletRequest request){
+        // 登录校验
+        String token = authService.adminAuthentication(name,password);
+        if(StringUtils.isBlank(token)){
+            throw new LyException(ExceptionEnum.USERNAME_OR_PASSWORD_ERROR);
+        }
+        // 将token写入cookie,并指定httpOnly为true，防止通过JS获取和修改
+        CookieUtils.setCookie(request,response,prop.getCookieName(),token,prop.getCookieMaxAge(), null, true);
+        return ResponseEntity.ok().build();
+    }
+
 
     /**
      * 验证用户信息
