@@ -8,6 +8,7 @@ import com.leyou.common.util.CookieUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +51,10 @@ public class CheckInterceptor extends HandlerInterceptorAdapter {
             String requestURI = request.getRequestURI();
             // 判断该管理员是否拥有该路径的权限，没有返回false
             List<String> uris = roleService.queryUri(userInfo.getId());
+            if(CollectionUtils.isEmpty(uris)){
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                return false;
+            }
             for(String uri : uris){
                 if(requestURI.startsWith(uri)){
                     // 放入线程域
@@ -57,7 +62,8 @@ public class CheckInterceptor extends HandlerInterceptorAdapter {
                     return true;
                 }
             }
-            return true;
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return false;
         } catch (Exception e){
             // 抛出异常，证明未登录,返回401
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
