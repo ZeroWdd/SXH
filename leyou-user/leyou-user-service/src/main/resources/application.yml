@@ -24,3 +24,8 @@ eureka:
 
 mybatis:
   type-aliases-package: com.leyou.user.pojo
+
+leyou:
+  jwt:
+    pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pub # 公钥地址
+    cookieName: LY_TOKEN

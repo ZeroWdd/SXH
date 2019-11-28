@@ -36,6 +36,7 @@ public class UserService {
     @Autowired
     private AmqpTemplate amqpTemplate;
 
+
     static final String KEY_PREFIX = "user:code:phone:";
 
     public Boolean checkData(String data, Integer type) {
@@ -131,5 +132,13 @@ public class UserService {
         if(count != 1){
             throw new LyException(ExceptionEnum.USER_DELETE_ERROR);
         }
+    }
+
+    public User queryUserById(Long id) {
+        User user = userMapper.selectByPrimaryKey(id);
+        if(org.springframework.util.StringUtils.isEmpty(user)){
+            throw new LyException(ExceptionEnum.USER_NOT_FOUND);
+        }
+        return user;
     }
 }

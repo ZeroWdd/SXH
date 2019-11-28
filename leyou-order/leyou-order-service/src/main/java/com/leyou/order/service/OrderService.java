@@ -1,8 +1,11 @@
 package com.leyou.order.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.leyou.auth.entity.UserInfo;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
+import com.leyou.common.pojo.PageResult;
 import com.leyou.common.util.IdWorker;
 import com.leyou.order.client.StockClient;
 import com.leyou.order.interceptor.LoginInterceptor;
@@ -157,6 +160,37 @@ public class OrderService {
         int count = orderStatusMapper.updateByPrimaryKeySelective(record);
         if(count != 1){
             throw new LyException(ExceptionEnum.ORDER_UPDATE_ERROR);
+        }
+    }
+
+    public PageResult<Order> queryUserOrderList(Integer page, Integer rows, Integer status) {
+        try {
+            // 分页
+            PageHelper.startPage(page, rows);
+            // 获取登录用户
+            UserInfo user = LoginInterceptor.getLoginUser();
+            // 创建查询条件
+            List<Order> orders = null;
+            if(status == null){
+                orders = orderMapper.queryOrderList(user.getId());
+            }else{
+                orders = orderMapper.queryOrderListByStatus(user.getId(), status);
+            }
+            // 查询orderDetail
+            for(Order order : orders){
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrderId(order.getOrderId());
+                // 整合
+                order.setOrderDetails(orderDetailMapper.select(orderDetail));
+            }
+
+            PageInfo<Order> pageInfo = new PageInfo<>(orders);
+            if(StringUtils.isEmpty(pageInfo)){
+                throw new LyException(ExceptionEnum.ORDER_NOT_FOUND);
+            }
+            return new PageResult<>(pageInfo.getTotal(),pageInfo.getPages(), pageInfo.getList());
+        } catch (Exception e) {
+            throw new LyException(ExceptionEnum.ORDER_QUERY_ERROR);
         }
     }
 }

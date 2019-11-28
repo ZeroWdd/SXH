@@ -29,6 +29,8 @@ eureka:
     lease-expiration-duration-in-seconds: 10 # 10秒不发送就过期
 mybatis:
   type-aliases-package: com.leyou.order.pojo
+  configuration:
+    map-underscore-to-camel-case: true   # 开启驼峰转换
 leyou:
   jwt:
     pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pub # 公钥地址

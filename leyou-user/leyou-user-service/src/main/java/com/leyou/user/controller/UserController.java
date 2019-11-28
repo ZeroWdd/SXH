@@ -1,10 +1,14 @@
 package com.leyou.user.controller;
 
+import com.leyou.auth.entity.UserInfo;
+import com.leyou.auth.util.JwtUtils;
 import com.leyou.common.pojo.PageResult;
+import com.leyou.user.config.JwtProperties;
 import com.leyou.user.pojo.User;
 import com.leyou.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@EnableConfigurationProperties(JwtProperties.class)
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtProperties prop;
 
     /**
      * 用户校验
@@ -85,6 +93,17 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "根据token获取用户信息")
+    @GetMapping("/token")
+    public ResponseEntity<User> queryUserByToken(@CookieValue("LY_TOKEN") String token ) throws Exception {
+
+        // 从token中解析token信息
+        UserInfo userInfo = JwtUtils.getInfoFromToken(token, prop.getPublicKey());
+
+        User user = userService.queryUserById(userInfo.getId());
+        return ResponseEntity.ok(user);
     }
 
 }

@@ -59,6 +59,7 @@ public enum ExceptionEnum {
     PERMISSION_SAVE_ERROR(500,"权限添加失败"),
     PERMISSION_DELETE_ERROR(500,"权限删除失败"),
     PERMISSION_UPDATE_ERROR(500,"权限更改失败"),
+    ORDER_QUERY_ERROR(500,"订单查询异常"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
 
