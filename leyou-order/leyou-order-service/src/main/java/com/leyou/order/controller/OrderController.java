@@ -2,6 +2,7 @@ package com.leyou.order.controller;
 
 import com.leyou.common.pojo.PageResult;
 import com.leyou.order.pojo.Order;
+import com.leyou.order.pojo.OrderStatus;
 import com.leyou.order.service.OrderService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +81,12 @@ public class OrderController {
             @RequestParam(value = "status", required = false) Integer status) {
         PageResult<Order> result = orderService.queryUserOrderList(page, rows, status);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/status/{orderId}")
+    @ApiOperation(value = "查询订单状态")
+    public ResponseEntity<OrderStatus> queryOrderStatusByOrderId(@PathVariable Long orderId){
+        OrderStatus orderStatus = orderService.queryOrderStatusByOrderId(orderId);
+        return ResponseEntity.ok(orderStatus);
     }
 }

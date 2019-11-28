@@ -20,6 +20,7 @@ public enum ExceptionEnum {
     SPEC_PARAM_NOT_FOUND(404,"商品规格参数未查到"),
     GOODS_NOT_FOUND(404,"商品未查到"),
     GOODS_DETAIL_NOT_FOUND(404,"商品SPU_DETAIL未查到"),
+    ORDER_STATUS_NOT_FOUND(404,"订单状态未查到"),
     GOODS_SKU_NOT_FOUND(404,"商品SKU未查到"),
     STOCK_NOT_FOUND(404,"库存未查到"),
     CART_NOT_FOUND(404,"购物车为空"),

@@ -14,11 +14,11 @@ import java.util.List;
  */
 public interface OrderMapper extends Mapper<Order> {
 
-    @Select("select tb_order.* " +
+    @Select("select tb_order.*,tb_order_status.status " +
             "from tb_order,tb_order_status " +
             "where tb_order.order_id = tb_order_status.order_id and tb_order.user_id = #{userId}")
     List<Order> queryOrderList(@Param("userId") Long userId);
 
-    @Select("select tb_order.* from tb_order,tb_order_status where tb_order.order_id = tb_order_status.order_id and tb_order.user_id = #{userId} and tb_order_status.status = #{status}")
+    @Select("select tb_order.*,tb_order_status.status from tb_order,tb_order_status where tb_order.order_id = tb_order_status.order_id and tb_order.user_id = #{userId} and tb_order_status.status = #{status}")
     List<Order> queryOrderListByStatus(@Param("userId") Long userId, @Param("status") Integer status);
 }

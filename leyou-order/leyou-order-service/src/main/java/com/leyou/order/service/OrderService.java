@@ -193,4 +193,12 @@ public class OrderService {
             throw new LyException(ExceptionEnum.ORDER_QUERY_ERROR);
         }
     }
+
+    public OrderStatus queryOrderStatusByOrderId(Long orderId) {
+        OrderStatus orderStatus = orderStatusMapper.selectByPrimaryKey(orderId);
+        if(StringUtils.isEmpty(orderStatus)){
+            throw new LyException(ExceptionEnum.ORDER_STATUS_NOT_FOUND);
+        }
+        return orderStatus;
+    }
 }
