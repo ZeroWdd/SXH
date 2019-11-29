@@ -9,6 +9,7 @@ import com.leyou.order.pojo.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,9 @@ public class AddressService {
     private AddressMapper addressMapper;
 
     public Long addAddress(Address address) {
+        //获取登录用户
+        UserInfo userInfo = LoginInterceptor.getLoginUser();
+        address.setUserId(userInfo.getId());
         Long addressId  = null;
         try {
             addressId = new Long(addressMapper.insert(address));
@@ -79,5 +83,20 @@ public class AddressService {
             e.printStackTrace();
             throw new LyException(ExceptionEnum.ADDRESS_DELETE_ERROR);
         }
+    }
+
+    public Address queryAddressById(Long addressId) {
+        Address address = addressMapper.selectByPrimaryKey(addressId);
+        if(StringUtils.isEmpty(address)){
+            throw new LyException(ExceptionEnum.ADDRESS_NOT_FOUND);
+        }
+        return address;
+    }
+
+    public void updateAddressDefault(Long addressId) {
+        // 先将所有的地址状态设为非默认
+        addressMapper.updateAddressDefaultAll();
+        // 再设置指定id为默认地址
+        addressMapper.updateAddressDefault(addressId);
     }
 }

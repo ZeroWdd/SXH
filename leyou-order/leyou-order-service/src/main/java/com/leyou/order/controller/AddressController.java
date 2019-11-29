@@ -44,10 +44,24 @@ public class AddressController {
         return ResponseEntity.ok(addressList);
     }
 
+    @GetMapping("/{addressId}")
+    @ApiOperation("根据地址id查询地址")
+    public ResponseEntity<Address> queryAddressById(@PathVariable Long addressId){
+        Address address = addressService.queryAddressById(addressId);
+        return ResponseEntity.ok(address);
+    }
+
     @DeleteMapping("/{addressId}")
     @ApiOperation("根据地址id删除地址")
     public ResponseEntity<Void> deleteAddress(@PathVariable Long addressId){
         addressService.deleteAddress(addressId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PutMapping("/default/{addressId}")
+    @ApiOperation("设置为默认地址")
+    public ResponseEntity<Void> updateAddressDefault(@PathVariable Long addressId){
+        addressService.updateAddressDefault(addressId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
