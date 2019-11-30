@@ -59,4 +59,16 @@ public class AuthService {
             throw new LyException(ExceptionEnum.USERNAME_OR_PASSWORD_ERROR);
         }
     }
+
+    public String updatePassword(User user) {
+        // 生成token
+        String token = null;
+        try {
+            userClient.updateUserPassword(user.getId(),user.getPassword());
+            token = JwtUtils.generateToken(new UserInfo(user.getId(), user.getUsername()), properties.getPrivateKey(), properties.getExpire());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return token;
+    }
 }

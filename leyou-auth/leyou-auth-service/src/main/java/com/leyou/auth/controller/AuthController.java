@@ -7,6 +7,7 @@ import com.leyou.auth.util.JwtUtils;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
 import com.leyou.common.util.CookieUtils;
+import com.leyou.user.pojo.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -99,6 +100,60 @@ public class AuthController {
         } catch (Exception e) {
             throw new LyException(ExceptionEnum.INVALID_TOKEN);
         }
+    }
+
+    /**
+     * 校验密码是否正确
+     * @param token
+     * @param password
+     * @return
+     */
+    @PostMapping("/check/password")
+    public ResponseEntity<Void> checkPassword(@CookieValue("LY_TOKEN")String token,@RequestParam("password") String password){
+        // 从token中解析token信息
+        try {
+            UserInfo userInfo = JwtUtils.getInfoFromToken(token, prop.getPublicKey());
+            token = authService.authentication(userInfo.getUsername(),password);
+            if(StringUtils.isEmpty(token)){
+                throw new LyException(ExceptionEnum.PASSWORD_ERROR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new LyException(ExceptionEnum.PASSWORD_ERROR);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 修改密码
+     * @param token
+     * @param password
+     * @return
+     */
+    @PutMapping("/user/password")
+    public ResponseEntity<Void> updatePassword(@CookieValue("LY_TOKEN")String token,
+                                                   @RequestParam("password") String password,
+                                                   HttpServletRequest request,
+                                                   HttpServletResponse response){
+        try {
+            // 从token中解析token信息
+            UserInfo userInfo = JwtUtils.getInfoFromToken(token, prop.getPublicKey());
+            // 重新更新token
+            User user = new User();
+            user.setId(userInfo.getId());
+            user.setPassword(password);
+            user.setUsername(userInfo.getUsername());
+            token = authService.updatePassword(user);
+            if(StringUtils.isEmpty(token)){
+                throw new LyException(ExceptionEnum.USER_UPDATE_ERROR);
+            }
+            // 更新cookie中的token
+            CookieUtils.setCookie(request, response, prop.getCookieName(), token, prop.getCookieMaxAge());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new LyException(ExceptionEnum.PASSWORD_ERROR);
+        }
+        return ResponseEntity.ok().build();
     }
 
 }

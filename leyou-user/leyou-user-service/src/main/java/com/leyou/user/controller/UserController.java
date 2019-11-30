@@ -106,4 +106,12 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @ApiOperation(value = "修改用户")
+    @PutMapping("/")
+    public ResponseEntity<Void> updateUserPassword(@RequestParam("id") Long id, @RequestParam("password") String password){
+
+        userService.updateUserPassword(id,password);
+        return ResponseEntity.ok().build();
+    }
+
 }

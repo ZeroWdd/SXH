@@ -141,4 +141,15 @@ public class UserService {
         }
         return user;
     }
+
+    public void updateUserPassword(Long id , String password) {
+        // 先查询user获取盐
+        User u = userMapper.selectByPrimaryKey(id);
+        // 对密码加密
+        u.setPassword(CodecUtils.md5Hex(password, u.getSalt()));
+        int count = userMapper.updateByPrimaryKey(u);
+        if(count != 1){
+            throw new LyException(ExceptionEnum.USER_UPDATE_ERROR);
+        }
+    }
 }
