@@ -51,10 +51,10 @@ leyou:
     allowPaths:
       - /api/auth
       - /api/search
-#      - /api/user/register
-#      - /api/user/check
-#      - /api/user/code
-      - /api/user    # 测试用
+      - /api/user/register
+      - /api/user/check
+      - /api/user/code
+#      - /api/user    # 测试用
       - /api/item
-      - /api/admin   # 测试用
-      - /api/order   # 测试用
+#      - /api/admin   # 测试用
+#      - /api/order   # 测试用

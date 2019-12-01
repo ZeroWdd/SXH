@@ -63,6 +63,7 @@ public enum ExceptionEnum {
     ORDER_QUERY_ERROR(500,"订单查询异常"),
     PASSWORD_ERROR(500,"密码错误"),
     USER_UPDATE_ERROR(500,"用户更新失败"),
+    ORDER_DELETE_ERROR(500,"订单删除失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
     STATUS_is_true(403,"状态已更改，无需再次操作"),

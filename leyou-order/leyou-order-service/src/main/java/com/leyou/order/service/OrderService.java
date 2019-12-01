@@ -246,4 +246,16 @@ public class OrderService {
         // 包装成分页结果集返回
         return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
     }
+
+    @Transactional
+    public void deleteOrder(Long orderId) {
+        int count = orderMapper.deleteByPrimaryKey(orderId);
+        count = count + orderStatusMapper.deleteByPrimaryKey(orderId);
+        if(count != 2){
+            throw new LyException(ExceptionEnum.ORDER_DELETE_ERROR);
+        }
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId(orderId);
+        orderDetailMapper.delete(orderDetail);
+    }
 }

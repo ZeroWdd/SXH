@@ -103,4 +103,11 @@ public class OrderController {
         PageResult<Order> result = orderService.queryOrdersByPage(key, page, rows, sortBy, desc);
         return ResponseEntity.ok(result);
     }
+
+    @ApiOperation(value = "根据id删除订单")
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId){
+        orderService.deleteOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
 }
