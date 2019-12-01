@@ -137,6 +137,12 @@ public class OrderService {
         OrderStatus record = new OrderStatus();
         record.setOrderId(id);
         record.setStatus(status);
+        // 先判断是否状态已经执行成功，避免客户重读操作
+        OrderStatus orderStatus = orderStatusMapper.selectByPrimaryKey(id);
+        if(status.equals(orderStatus.getStatus())){
+            // 已更改
+            throw new LyException(ExceptionEnum.STATUS_is_true);
+        }
         // 根据状态判断要修改的时间
         switch (status) {
             case 2:

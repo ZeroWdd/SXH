@@ -27,9 +27,11 @@ public class OrderController {
     @PostMapping("")
     @ApiOperation(value = "创建订单接口，返回订单编号", notes = "创建订单")
     @ApiImplicitParam(name = "order", required = true, value = "订单的json对象,包含订单条目和物流信息")
-    public ResponseEntity<String> createOrder(@RequestBody @Valid Order order) {
+    public ResponseEntity<Order> createOrder(@RequestBody @Valid Order order) {
         Long id = orderService.createOrder(order);
-        return ResponseEntity.ok(id + "");
+        order = new Order();
+        order.setOrderId(id);
+        return ResponseEntity.ok(order);
     }
 
     @GetMapping("/{id}")

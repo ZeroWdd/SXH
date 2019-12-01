@@ -65,6 +65,7 @@ public enum ExceptionEnum {
     USER_UPDATE_ERROR(500,"用户更新失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
+    STATUS_is_true(403,"状态已更改，无需再次操作"),
 
     INVALID_USER_TYPE(400,"无效的参数"),
     INVALID_VERIFY_CODE(400,"无效的验证码"),
