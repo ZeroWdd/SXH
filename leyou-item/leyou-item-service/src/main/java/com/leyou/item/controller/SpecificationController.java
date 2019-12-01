@@ -25,7 +25,7 @@ public class SpecificationController {
     private SpecificationService specificationService;
 
     @ApiOperation(value = "根据分类id查询规格组")
-    @GetMapping("groups/{cid}")
+    @GetMapping("/groups/{cid}")
     public ResponseEntity<List<SpecGroup>> queryGroupsByCid(@PathVariable("cid")Long cid){
         List<SpecGroup> list =  specificationService.queryGroupsByCid(cid);
         return ResponseEntity.ok(list);
@@ -42,7 +42,7 @@ public class SpecificationController {
     }
 
     @ApiOperation(value = "查询规格组及组内参数")
-    @GetMapping("{cid}")
+    @GetMapping("/{cid}")
     public ResponseEntity<List<SpecGroup>> querySpecsByCid(@PathVariable("cid") Long cid){
         List<SpecGroup> list = specificationService.querySpecsByCid(cid);
         return ResponseEntity.ok(list);
