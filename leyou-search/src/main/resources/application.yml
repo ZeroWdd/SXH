@@ -6,11 +6,11 @@ spring:
   data:
     elasticsearch:
       cluster-name: elasticsearch
-      cluster-nodes: 192.168.159.134:9300
+      cluster-nodes: 192.168.159.135:9300
   jackson:
     default-property-inclusion: non_null  # null的字段不传入给前端
   rabbitmq:
-    host: 192.168.159.134
+    host: 192.168.159.135
     username: guest
     password: guest
     virtual-host: /
