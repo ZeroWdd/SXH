@@ -91,4 +91,16 @@ public class OrderController {
         OrderStatus orderStatus = orderService.queryOrderStatusByOrderId(orderId);
         return ResponseEntity.ok(orderStatus);
     }
+
+    @ApiOperation(value = "条件分页查询订单")
+    @GetMapping("/page")
+    public ResponseEntity<PageResult<Order>> queryOrdersByPage(
+            @RequestParam(value = "key", required = false)String key,
+            @RequestParam(value = "page", defaultValue = "1")Integer page,
+            @RequestParam(value = "rows", defaultValue = "10")Integer rows,
+            @RequestParam(value = "sortBy", required = false)String sortBy,
+            @RequestParam(value = "desc", required = false)Boolean desc){
+        PageResult<Order> result = orderService.queryOrdersByPage(key, page, rows, sortBy, desc);
+        return ResponseEntity.ok(result);
+    }
 }

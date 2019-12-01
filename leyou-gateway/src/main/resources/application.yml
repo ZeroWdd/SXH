@@ -57,3 +57,4 @@ leyou:
       - /api/user    # 测试用
       - /api/item
       - /api/admin   # 测试用
+      - /api/order   # 测试用

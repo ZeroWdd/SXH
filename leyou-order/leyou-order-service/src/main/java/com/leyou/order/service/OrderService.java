@@ -2,6 +2,7 @@ package com.leyou.order.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.base.CaseFormat;
 import com.leyou.auth.entity.UserInfo;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
@@ -206,5 +208,42 @@ public class OrderService {
             throw new LyException(ExceptionEnum.ORDER_STATUS_NOT_FOUND);
         }
         return orderStatus;
+    }
+
+    public PageResult<Order> queryOrdersByPage(String key, Integer page, Integer rows, String sortBy, Boolean desc) {
+        // 初始化example对象
+        Example example = new Example(Order.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        // 模糊查询
+        if (org.apache.commons.lang.StringUtils.isNotBlank(key)) {
+            criteria.andEqualTo("userId",key).orEqualTo("orderId",key);
+        }
+
+        // 添加分页条件
+        PageHelper.startPage(page, rows);
+
+        // 添加排序条件
+        if (org.apache.commons.lang.StringUtils.isNotBlank(sortBy)) {
+            sortBy = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, sortBy); //驼峰装换
+            example.setOrderByClause(sortBy + " " + (desc ? "desc" : "asc"));
+        }
+
+        List<Order> orders = orderMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(orders)){
+            throw new LyException(ExceptionEnum.ORDER_NOT_FOUND);
+        }
+
+        // 添加状态
+        for(Order order : orders){
+            // 查询订单状态
+            OrderStatus status = orderStatusMapper.selectByPrimaryKey(order.getOrderId());
+            order.setStatus(status.getStatus());
+        }
+
+        // 包装成pageInfo
+        PageInfo<Order> pageInfo = new PageInfo<>(orders);
+        // 包装成分页结果集返回
+        return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
     }
 }
