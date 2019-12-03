@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -210,35 +211,46 @@ public class OrderService {
         return orderStatus;
     }
 
-    public PageResult<Order> queryOrdersByPage(String key, Integer page, Integer rows, String sortBy, Boolean desc) {
+    public PageResult<Order> queryOrdersByPage(String key, Integer page, Integer rows, String sortBy, Boolean desc,Long userId,Integer statusCode) {
         // 初始化example对象
         Example example = new Example(Order.class);
         Example.Criteria criteria = example.createCriteria();
 
         // 模糊查询
         if (org.apache.commons.lang.StringUtils.isNotBlank(key)) {
-            criteria.andEqualTo("userId",key).orEqualTo("orderId",key);
+            criteria.andEqualTo("orderId",key);
+        }
+
+        // 根据用户id查询
+        if(!StringUtils.isEmpty(userId)){
+            criteria.andEqualTo("userId",userId);
         }
 
         // 添加分页条件
-        PageHelper.startPage(page, rows);
+        if(StringUtils.isEmpty(statusCode)){
+            PageHelper.startPage(page, rows);
+        }
 
         // 添加排序条件
         if (org.apache.commons.lang.StringUtils.isNotBlank(sortBy)) {
             sortBy = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, sortBy); //驼峰装换
             example.setOrderByClause(sortBy + " " + (desc ? "desc" : "asc"));
         }
-
         List<Order> orders = orderMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(orders)){
             throw new LyException(ExceptionEnum.ORDER_NOT_FOUND);
         }
 
         // 添加状态
-        for(Order order : orders){
+        for(Iterator<Order> it = orders.iterator();it.hasNext();){
+            Order order = it.next();
             // 查询订单状态
             OrderStatus status = orderStatusMapper.selectByPrimaryKey(order.getOrderId());
             order.setStatus(status.getStatus());
+            // 若有状态码，则进行筛选
+            if(!StringUtils.isEmpty(statusCode) && !order.getStatus().equals(statusCode)){
+                it.remove();
+            }
         }
 
         // 包装成pageInfo
@@ -257,5 +269,20 @@ public class OrderService {
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderId(orderId);
         orderDetailMapper.delete(orderDetail);
+    }
+
+    public List<Order> queryOrderByStatusAndUserId(Integer status, Long userId) {
+        Order order = new Order();
+        order.setUserId(userId);
+        List<Order> select = orderMapper.select(order);
+        for(Iterator<Order> it = select.iterator();it.hasNext();){
+            Order o = it.next();
+            OrderStatus orderStatus = orderStatusMapper.selectByPrimaryKey(o.getOrderId());
+            o.setStatus(orderStatus.getStatus());
+            if(!status.equals(orderStatus.getStatus())){
+                it.remove();
+            }
+        }
+        return select;
     }
 }

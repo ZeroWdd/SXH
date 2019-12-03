@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Auther: wdd
@@ -99,8 +100,10 @@ public class OrderController {
             @RequestParam(value = "page", defaultValue = "1")Integer page,
             @RequestParam(value = "rows", defaultValue = "10")Integer rows,
             @RequestParam(value = "sortBy", required = false)String sortBy,
-            @RequestParam(value = "desc", required = false)Boolean desc){
-        PageResult<Order> result = orderService.queryOrdersByPage(key, page, rows, sortBy, desc);
+            @RequestParam(value = "desc", required = false)Boolean desc,
+            @RequestParam(value = "userId", required = false)Long userId,
+            @RequestParam(value = "statusCode", required = false)Integer statusCode){
+        PageResult<Order> result = orderService.queryOrdersByPage(key, page, rows, sortBy, desc,userId,statusCode);
         return ResponseEntity.ok(result);
     }
 
@@ -109,5 +112,12 @@ public class OrderController {
     public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId){
         orderService.deleteOrder(orderId);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "根据用户id和状态查询订单")
+    @GetMapping("/status/{status}/{userId}")
+    public ResponseEntity<List<Order>> queryOrderByStatusAndUserId(@PathVariable Integer status,@PathVariable Long userId){
+        List<Order> orders = orderService.queryOrderByStatusAndUserId(status,userId);
+        return ResponseEntity.ok(orders);
     }
 }
