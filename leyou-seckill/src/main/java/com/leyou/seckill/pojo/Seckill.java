@@ -1,11 +1,9 @@
 package com.leyou.seckill.pojo;
 
+import com.leyou.item.pojo.Sku;
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -20,9 +18,14 @@ public class Seckill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long spu_id;
-    private Long sku_id;
+    private Long spuId;
+    private Long skuId;
+    private Long price; // 秒杀价格
     private Date startTime; // 开始时间
     private Date endTime; // 结束时间
     private String introduction; // 描述
+    private Integer num; // 秒杀库存
+
+    @Transient
+    private Sku sku;
 }

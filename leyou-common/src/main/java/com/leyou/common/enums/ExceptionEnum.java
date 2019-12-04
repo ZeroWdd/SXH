@@ -64,6 +64,7 @@ public enum ExceptionEnum {
     PASSWORD_ERROR(500,"密码错误"),
     USER_UPDATE_ERROR(500,"用户更新失败"),
     ORDER_DELETE_ERROR(500,"订单删除失败"),
+    SECKILL_SAVE_ERROR(500,"秒杀存储失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
     STATUS_is_true(403,"状态已更改，无需再次操作"),
@@ -73,6 +74,8 @@ public enum ExceptionEnum {
     USERNAME_OR_PASSWORD_ERROR(400,"用户名或密码错误"),
     INVALID_TOKEN(400,"无效的用户凭证"),
     INVALID_ORDER_TYPE(400,"无效的订单状态"),
+    INVALID_DATE(400,"无效的日期"),
+    INVALID_STOCK_NUM(400,"无效的库存数量"),
     ;
     private int code;
     private String msg;
