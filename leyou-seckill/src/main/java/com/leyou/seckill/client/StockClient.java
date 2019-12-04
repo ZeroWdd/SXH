@@ -8,6 +8,6 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @Date: 2019/12/4 19:54
  * @Description:
  */
-@FeignClient("stock-server")
+@FeignClient("stock-service")
 public interface StockClient extends StockApi {
 }

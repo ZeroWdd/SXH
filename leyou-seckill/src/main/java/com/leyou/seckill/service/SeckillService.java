@@ -47,7 +47,7 @@ public class SeckillService {
             // 在内部判断参数是否合法
             stockClient.decreaseStock(seckill.getSkuId(), seckill.getNum());
         } catch (Exception e) {
-            // 抛出异常则表明不合法,秒杀库存设置大于总库存
+            // 抛出异常则表明不合法
             throw new LyException(ExceptionEnum.INVALID_STOCK_NUM);
         }
         // 写入数据库

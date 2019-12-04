@@ -1,5 +1,5 @@
 server:
-  port: 8091
+  port: 8092
 spring:
   application:
     name: seckill-service
@@ -24,10 +24,13 @@ eureka:
   client:
     service-url:
       defaultZone: http://127.0.0.1:10086/eureka
-    registry-fetch-interval-seconds: 10
   instance:
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
+mybatis:
+  type-aliases-package: com.leyou.seckill.pojo
+  configuration:
+    map-underscore-to-camel-case: true   # 开启驼峰转换
 leyou:
   jwt:
     pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pub # 公钥地址

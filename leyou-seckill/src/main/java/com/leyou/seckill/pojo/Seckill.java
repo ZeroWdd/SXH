@@ -18,7 +18,6 @@ public class Seckill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long spuId;
     private Long skuId;
     private Long price; // 秒杀价格
     private Date startTime; // 开始时间
