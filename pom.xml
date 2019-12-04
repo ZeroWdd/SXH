@@ -22,6 +22,7 @@
         <module>leyou-order</module>
         <module>leyou-stock</module>
         <module>leyou-admin</module>
+        <module>leyou-seckill</module>
     </modules>
     <packaging>pom</packaging>
 
