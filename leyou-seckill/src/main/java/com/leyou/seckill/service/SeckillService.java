@@ -96,7 +96,19 @@ public class SeckillService {
             throw new LyException(ExceptionEnum.SECKILL_NOT_FOUND);
         }
 
-        //
+        // 判断取出的秒杀项目在当前是否过期
+        int count = 0;
+        Date now = new Date();
+        for(Seckill seckill : seckills){
+            if(now.getTime() - seckill.getEndTime().getTime() >= 0){
+                // 过期
+                seckill.setNum(1);
+                count = seckillMapper.updateByPrimaryKey(seckill);
+                if(count != 1){
+                    throw new LyException(ExceptionEnum.SECKILL_UPDATE_ERROR);
+                }
+            }
+        }
 
         // 包装成pageInfo
         PageInfo<Seckill> pageInfo = new PageInfo<>(seckills);
