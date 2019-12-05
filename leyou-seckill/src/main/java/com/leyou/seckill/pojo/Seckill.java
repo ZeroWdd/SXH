@@ -26,6 +26,7 @@ public class Seckill {
     private String introduction; // 描述
     private Integer num; // 秒杀库存
     private String title; // 标题
+    private Integer status; // 是否过期 0 未过期 1 已过期
 
     @Transient
     private Sku sku;

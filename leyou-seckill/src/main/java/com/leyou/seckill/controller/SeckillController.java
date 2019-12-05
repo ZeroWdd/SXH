@@ -1,6 +1,7 @@
 package com.leyou.seckill.controller;
 
 import com.leyou.common.pojo.PageResult;
+import com.leyou.item.pojo.Sku;
 import com.leyou.seckill.pojo.Seckill;
 import com.leyou.seckill.service.SeckillService;
 import io.swagger.annotations.Api;
@@ -8,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Auther: wdd
@@ -37,5 +40,12 @@ public class SeckillController {
             @RequestParam(value = "desc", required = false)Boolean desc){
         PageResult<Seckill> result = seckillService.querySeckillsByPage(key, page, rows, sortBy, desc);
         return ResponseEntity.ok(result);
+    }
+
+    @ApiOperation("显示可以添加的秒杀商品")
+    @GetMapping("/sku/{spuId}")
+    public ResponseEntity<List<Sku>> querySkuBySpuId(@PathVariable Long spuId){
+        List<Sku> skus = seckillService.querySkuBySpuId(spuId);
+        return ResponseEntity.ok(skus);
     }
 }

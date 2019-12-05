@@ -7,6 +7,7 @@ import com.google.common.base.CaseFormat;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
 import com.leyou.common.pojo.PageResult;
+import com.leyou.item.pojo.Sku;
 import com.leyou.seckill.client.GoodsClient;
 import com.leyou.seckill.client.StockClient;
 import com.leyou.seckill.mapper.SeckillMapper;
@@ -20,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -39,14 +41,14 @@ public class SeckillService {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    private static String SECKILL_KEY = "SECKILL_KEY_";
+    private static String SECKILL_KEY = "SECKILL_KEY_"; // key 加上seckill的id
 
     @Transactional
     public void addSeckill(Seckill seckill) {
-        // 判断时间参数是否合法 即 结束时间大于开始时间 || 当前时间大于开始时间
+        // 判断时间参数是否合法 即 结束时间大于开始时间 || 当前时间小于开始时间
         Date now = new Date();
-        long diff = (seckill.getEndTime().getTime() - seckill.getStartTime().getTime()) / 1000;  // 过期时间,设置redis有用
-        if (diff <= 0 || (now.getTime() - seckill.getStartTime().getTime()) / 1000 <= 0) {
+        long diff = (seckill.getEndTime().getTime() - now.getTime()) / 1000;  // 过期时间,设置redis有用
+        if ((seckill.getEndTime().getTime() - seckill.getStartTime().getTime()) / 1000 <= 0 || (now.getTime() - seckill.getStartTime().getTime()) / 1000 >= 0) {
             // 不合法
             throw new LyException(ExceptionEnum.INVALID_DATE);
         }
@@ -59,6 +61,7 @@ public class SeckillService {
             throw new LyException(ExceptionEnum.INVALID_STOCK_NUM);
         }
         // 写入数据库
+        seckill.setStatus(0); // 设置有效
         int count = seckillMapper.insert(seckill);
         if (count != 1) {
             throw new LyException(ExceptionEnum.SECKILL_SAVE_ERROR);
@@ -102,7 +105,7 @@ public class SeckillService {
         for(Seckill seckill : seckills){
             if(now.getTime() - seckill.getEndTime().getTime() >= 0){
                 // 过期
-                seckill.setNum(1);
+                seckill.setStatus(1);
                 count = seckillMapper.updateByPrimaryKey(seckill);
                 if(count != 1){
                     throw new LyException(ExceptionEnum.SECKILL_UPDATE_ERROR);
@@ -115,5 +118,33 @@ public class SeckillService {
         // 包装成分页结果集返回
         return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
 
+    }
+
+    public List<Sku> querySkuBySpuId(Long spuId) {
+        // 1.通过spuId获取sku列表
+        List<Sku> skus = goodsClient.querySkuBySpuId(spuId);
+        // 2.对sku列表进行筛选 选择可以添加的sku
+        // 2.1先判断数据库中是否已存在sku秒杀商品并未过期,存在则将无法添加
+        for(Iterator<Sku> it = skus.iterator(); it.hasNext();){
+            Sku sku = it.next();
+            Seckill seckill = new Seckill();
+            seckill.setStatus(0); // 未过期
+            seckill.setSkuId(sku.getId());
+            Seckill one = seckillMapper.selectOne(seckill);
+            if(!org.springframework.util.StringUtils.isEmpty(one)){ // 不为空,表明存在,即未过期,不可添加
+                // 2.2有可能redis与数据库尚未同步,即redis已过期
+                String json = redisTemplate.opsForValue().get(SECKILL_KEY + one.getId());
+                if(StringUtils.isEmpty(json)){
+                    // 为空,表明过期,可添加,并同步数据库
+                    seckill.setStatus(1); // 过期
+                    seckillMapper.insertSelective(seckill);
+                    continue; // 结束本次循环
+                }
+                // 不为空
+                it.remove();
+            }
+        }
+        // 剩下的sku列表方可添加
+        return skus;
     }
 }

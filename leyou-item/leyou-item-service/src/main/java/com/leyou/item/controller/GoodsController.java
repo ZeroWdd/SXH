@@ -52,7 +52,7 @@ public class GoodsController {
         return ResponseEntity.ok(spuDetail);
     }
 
-    @ApiOperation(value = "查询商品sku")
+    @ApiOperation(value = "根据spuId查询商品sku")
     @GetMapping("/sku/list")
     public ResponseEntity<List<Sku>> querySkusBySpuId(@RequestParam("id")Long spuId){
         List<Sku> skus = goodsService.querySkusBySpuId(spuId);
