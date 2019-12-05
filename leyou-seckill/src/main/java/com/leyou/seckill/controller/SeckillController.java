@@ -1,14 +1,13 @@
 package com.leyou.seckill.controller;
 
+import com.leyou.common.pojo.PageResult;
 import com.leyou.seckill.pojo.Seckill;
 import com.leyou.seckill.service.SeckillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Auther: wdd
@@ -26,5 +25,17 @@ public class SeckillController {
     public ResponseEntity<Void> addSeckill(@RequestBody Seckill seckill){
         seckillService.addSeckill(seckill);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation("分页条件查询秒杀商品")
+    @GetMapping("/page")
+    public ResponseEntity<PageResult<Seckill>> querySeckillsByPage(
+            @RequestParam(value = "key", required = false)String key,
+            @RequestParam(value = "page", defaultValue = "1")Integer page,
+            @RequestParam(value = "rows", defaultValue = "5")Integer rows,
+            @RequestParam(value = "sortBy", required = false)String sortBy,
+            @RequestParam(value = "desc", required = false)Boolean desc){
+        PageResult<Seckill> result = seckillService.querySeckillsByPage(key, page, rows, sortBy, desc);
+        return ResponseEntity.ok(result);
     }
 }

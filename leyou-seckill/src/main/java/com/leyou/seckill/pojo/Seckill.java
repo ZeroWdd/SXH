@@ -18,12 +18,14 @@ public class Seckill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long spuId;
     private Long skuId;
     private Long price; // 秒杀价格
     private Date startTime; // 开始时间
     private Date endTime; // 结束时间
     private String introduction; // 描述
     private Integer num; // 秒杀库存
+    private String title; // 标题
 
     @Transient
     private Sku sku;
