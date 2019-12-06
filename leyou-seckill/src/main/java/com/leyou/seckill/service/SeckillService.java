@@ -43,6 +43,7 @@ public class SeckillService {
     private RabbitTemplate rabbitTemplate;
 
     private static String SECKILL_KEY = "SECKILL_KEY_"; // key 加上seckill的id
+    private static String SECKILL_LIST = "SECKILL_LIST"; //
 
     @Transactional
     public void addSeckill(Seckill seckill) {
@@ -154,5 +155,25 @@ public class SeckillService {
         }
         // 剩下的sku列表方可添加
         return skus;
+    }
+
+    public List<Seckill> querySeckills() {
+        List<Seckill> select = new ArrayList<>();
+        // 1.先判断redis是否有
+        String json = redisTemplate.opsForValue().get(SECKILL_LIST);
+        if(StringUtils.isEmpty(json)){
+            // 2.从数据库中查询有效的秒杀商品再前台展示
+            Seckill seckill = new Seckill();
+            seckill.setStatus(0);
+            select = seckillMapper.select(seckill);
+            if(CollectionUtils.isEmpty(select)){
+                throw new LyException(ExceptionEnum.SECKILL_NOT_FOUND);
+            }
+            // 将数据存入redis,设置过期时间5分钟
+            redisTemplate.opsForValue().set(SECKILL_LIST,JSON.toJSONString(select),5,TimeUnit.MINUTES);
+            return select;
+        }
+        select = JSON.parseArray(json, Seckill.class);
+        return select;
     }
 }

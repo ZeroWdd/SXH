@@ -30,7 +30,7 @@ public class SeckillController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation("分页条件查询秒杀商品")
+    @ApiOperation("分页条件查询秒杀商品,用于后台显示")
     @GetMapping("/page")
     public ResponseEntity<PageResult<Seckill>> querySeckillsByPage(
             @RequestParam(value = "key", required = false)String key,
@@ -47,5 +47,12 @@ public class SeckillController {
     public ResponseEntity<List<Sku>> querySkuBySpuId(@PathVariable Long spuId){
         List<Sku> skus = seckillService.querySkuBySpuId(spuId);
         return ResponseEntity.ok(skus);
+    }
+
+    @ApiOperation("查询秒杀商品,用于前台显示")
+    @GetMapping("")
+    public ResponseEntity<List<Seckill>> querySeckills(){
+        List<Seckill> result = seckillService.querySeckills();
+        return ResponseEntity.ok(result);
     }
 }
