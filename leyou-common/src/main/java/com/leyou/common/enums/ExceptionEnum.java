@@ -67,6 +67,7 @@ public enum ExceptionEnum {
     ORDER_DELETE_ERROR(500,"订单删除失败"),
     SECKILL_SAVE_ERROR(500,"秒杀存储失败"),
     SECKILL_UPDATE_ERROR(500,"秒杀修改失败"),
+    STOCK_UPDATE_ERROR(500,"库存修改失败"),
 
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
     STATUS_is_true(403,"状态已更改，无需再次操作"),

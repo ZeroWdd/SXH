@@ -23,4 +23,11 @@ public class StockService {
             throw new LyException(ExceptionEnum.STOCK_LACK_ERROR);
         }
     }
+
+    public void increaseStockByskuId(Long skuId,Integer num) {
+        int count = stockMapper.increaseStock(skuId,num);
+        if(count == 0){
+            throw new LyException(ExceptionEnum.STOCK_UPDATE_ERROR);
+        }
+    }
 }

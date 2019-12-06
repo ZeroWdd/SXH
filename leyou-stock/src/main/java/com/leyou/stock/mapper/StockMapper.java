@@ -12,6 +12,9 @@ import tk.mybatis.mapper.common.Mapper;
  */
 public interface StockMapper extends Mapper<Stock> {
 
-    @Update("UPDATE tb_stock SET stock = stock - #{num} WHERE sku_id = #{skuId} AND stock > 0; ")
+    @Update("UPDATE tb_stock SET stock = stock - #{num} WHERE sku_id = #{skuId} AND stock > 0")
     int decreaseStock(@Param("skuId") Long skuId, @Param("num") Integer num);
+
+    @Update("UPDATE tb_stock SET stock = stock + #{num} WHERE sku_id = #{skuId} AND stock > 0")
+    int increaseStock(@Param("skuId") Long skuId, @Param("num") Integer num);
 }

@@ -13,6 +13,7 @@ import com.leyou.seckill.client.StockClient;
 import com.leyou.seckill.mapper.SeckillMapper;
 import com.leyou.seckill.pojo.Seckill;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,6 +39,8 @@ public class SeckillService {
     private StockClient stockClient;
     @Autowired
     private StringRedisTemplate redisTemplate;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     private static String SECKILL_KEY = "SECKILL_KEY_"; // key 加上seckill的id
 
@@ -103,12 +104,19 @@ public class SeckillService {
         int count = 0;
         Date now = new Date();
         for(Seckill seckill : seckills){
-            if(now.getTime() - seckill.getEndTime().getTime() >= 0){
-                // 过期
-                seckill.setStatus(1);
-                count = seckillMapper.updateByPrimaryKey(seckill);
-                if(count != 1){
-                    throw new LyException(ExceptionEnum.SECKILL_UPDATE_ERROR);
+            if(!seckill.getStatus().equals(1)){ // 数据库为1, 但有可能过期,进行比对
+                if(now.getTime() - seckill.getEndTime().getTime() >= 0){
+                    // 过期
+                    seckill.setStatus(1);
+                    count = seckillMapper.updateByPrimaryKey(seckill);
+                    if(count != 1){
+                        throw new LyException(ExceptionEnum.SECKILL_UPDATE_ERROR);
+                    }
+                    // 将秒杀库存还给总库存
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("skuId",seckill.getSkuId());
+                    map.put("num",seckill.getNum());
+                    rabbitTemplate.convertAndSend("leyou.stock.exchange","stock.update",map);
                 }
             }
         }

@@ -17,9 +17,6 @@ spring:
     username: guest
     password: guest
     virtual-host: /
-    template:
-      exchange: leyou.item.exchange
-    publisher-confirms: true
 eureka:
   client:
     service-url:
