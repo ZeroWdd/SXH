@@ -22,6 +22,7 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+
     /**
      * 跳转到商品详情页
      * @param model
@@ -44,9 +45,9 @@ public class GoodsController {
      * @return
      */
     @GetMapping("/seckill/{id}.html")
-    public String toSeckillPage(Model model, @PathVariable("id")Long id){
+    public String toSeckillPage(Model model,@PathVariable("id")Long id){
         // 加载所需的数据
-        Map<String, Object> modelMap = this.goodsService.seckillData(id);
+        Map<String, Object> modelMap = goodsService.seckillData(id);
         // 放入模型
         model.addAllAttributes(modelMap);
         return "seckillItem";

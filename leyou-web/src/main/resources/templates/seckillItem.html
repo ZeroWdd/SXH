@@ -137,7 +137,7 @@
                         <div class="fl">
                             <ul class="btn-choose unstyled">
                                 <li>
-                                    <a href="pay.html" target="_blank" class="sui-btn  btn-danger addshopcar">立即抢购</a>
+                                    <a v-if="startTime!=''" @click="rob" class="sui-btn  btn-danger addshopcar">立即抢购</a>
                                 </li>
                                 <li>
                                     <div class="sui-btn  btn-danger addshopcar" v-if="startTime!=''">开始时间:{{time}}</div>
@@ -431,6 +431,23 @@
                 }else{
                     return `0${time}`
                 }
+            },
+            rob(){
+                ly.http.get("/auth/verify").then(res=>{
+                    ly.http.post("/seckill/order/"+this.seckill.id).then(res=>{
+                        this.$Message.success("恭喜你,抢购成功");
+                    }).catch((res)=>{
+                        if(res.status === 403){
+                            this.$Message.success("很遗憾,抢购失败,已售空");
+
+                        }
+                        if(res.status === 500){
+                            this.$Message.success("很遗憾,抢购失败");
+                        }
+                    })
+                }).catch(()=>{
+
+                })
             }
         },
         components:{
