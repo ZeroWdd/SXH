@@ -169,11 +169,35 @@ public class SeckillService {
             if(CollectionUtils.isEmpty(select)){
                 throw new LyException(ExceptionEnum.SECKILL_NOT_FOUND);
             }
+            // 获取sku
+            for(Seckill s : select){
+                Sku sku = goodsClient.querySkuById(s.getSkuId());
+                s.setSku(sku);
+            }
             // 将数据存入redis,设置过期时间5分钟
             redisTemplate.opsForValue().set(SECKILL_LIST,JSON.toJSONString(select),5,TimeUnit.MINUTES);
             return select;
         }
         select = JSON.parseArray(json, Seckill.class);
         return select;
+    }
+
+    public Seckill querySeckill(Long id) {
+        // redis中读取
+        String json = redisTemplate.opsForValue().get(SECKILL_KEY + id);
+        // 可能数据据丢失
+        if(StringUtils.isEmpty(json)){
+            // 曲数据库查询
+            Seckill seckill = seckillMapper.selectByPrimaryKey(id);
+            // sku
+            Sku sku = goodsClient.querySkuById(seckill.getSkuId());
+            seckill.setSku(sku);
+            // 保存到redis
+            Long diff = seckill.getEndTime().getTime() - new Date().getTime();
+            redisTemplate.opsForValue().set(SECKILL_KEY + seckill.getId(), JSON.toJSONString(seckill), diff, TimeUnit.SECONDS);
+            return seckill;
+        }
+        Seckill seckill = JSON.parseObject(json, Seckill.class);
+        return seckill;
     }
 }

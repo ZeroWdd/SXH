@@ -1,10 +1,8 @@
 package com.leyou.web.service;
 
 import com.leyou.item.pojo.*;
-import com.leyou.web.client.BrandClient;
-import com.leyou.web.client.CategoryClient;
-import com.leyou.web.client.GoodsClient;
-import com.leyou.web.client.SpecificationClient;
+import com.leyou.seckill.pojo.Seckill;
+import com.leyou.web.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +26,9 @@ public class GoodsService {
 
     @Autowired
     private SpecificationClient specificationClient;
+
+    @Autowired
+    private SeckillClient seckillClient;
 
     public Map<String, Object> loadData(Long spuId){
         Map<String, Object> map = new HashMap<>();
@@ -71,6 +72,13 @@ public class GoodsService {
         map.put("groups", groups);
         // 查询特殊规格参数
         map.put("paramMap", paramMap);
+        return map;
+    }
+
+    public Map<String, Object> seckillData(Long id) {
+        Seckill seckill = seckillClient.querySeckill(id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("seckill",seckill);
         return map;
     }
 }

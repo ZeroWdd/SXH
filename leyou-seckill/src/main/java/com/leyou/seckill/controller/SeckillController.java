@@ -44,7 +44,7 @@ public class SeckillController {
 
     @ApiOperation("显示可以添加的秒杀商品")
     @GetMapping("/sku/{spuId}")
-    public ResponseEntity<List<Sku>> querySkuBySpuId(@PathVariable Long spuId){
+    public ResponseEntity<List<Sku>> querySkuBySpuId(@PathVariable("spuId") Long spuId){
         List<Sku> skus = seckillService.querySkuBySpuId(spuId);
         return ResponseEntity.ok(skus);
     }
@@ -53,6 +53,14 @@ public class SeckillController {
     @GetMapping("")
     public ResponseEntity<List<Seckill>> querySeckills(){
         List<Seckill> result = seckillService.querySeckills();
+        return ResponseEntity.ok(result);
+    }
+
+
+    @ApiOperation("根据Id查询秒杀商品,用于前台显示")
+    @GetMapping("/{id}")
+    public ResponseEntity<Seckill> querySeckill(@PathVariable("id") Long id){
+        Seckill result = seckillService.querySeckill(id);
         return ResponseEntity.ok(result);
     }
 }
