@@ -7,11 +7,15 @@ import com.google.common.base.CaseFormat;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
 import com.leyou.common.pojo.PageResult;
+import com.leyou.common.util.IdWorker;
 import com.leyou.item.pojo.Sku;
 import com.leyou.seckill.client.GoodsClient;
 import com.leyou.seckill.client.StockClient;
+import com.leyou.seckill.interceptor.LoginInterceptor;
 import com.leyou.seckill.mapper.SeckillMapper;
+import com.leyou.seckill.mapper.SeckillOrderMapper;
 import com.leyou.seckill.pojo.Seckill;
+import com.leyou.seckill.pojo.SeckillOrder;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +38,8 @@ public class SeckillService {
     @Autowired
     private SeckillMapper seckillMapper;
     @Autowired
+    private SeckillOrderMapper seckillOrderMapper;
+    @Autowired
     private GoodsClient goodsClient;
     @Autowired
     private StockClient stockClient;
@@ -42,8 +48,13 @@ public class SeckillService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private IdWorker idWorker;
+
     private static String SECKILL_KEY = "SECKILL_KEY_"; // key 加上seckill的id
     private static String SECKILL_LIST = "SECKILL_LIST"; //
+    private static String SECKILL_NUM = "SECKILL_NUM_"; //
+
 
     @Transactional
     public void addSeckill(Seckill seckill) {
@@ -199,5 +210,39 @@ public class SeckillService {
         }
         Seckill seckill = JSON.parseObject(json, Seckill.class);
         return seckill;
+    }
+
+    public void createOrder(Long id) {
+        // 从redis中取出对应秒杀商品
+        String json = redisTemplate.opsForValue().get(SECKILL_KEY + id);
+        if(!StringUtils.isEmpty(json)){
+            Seckill seckill = JSON.parseObject(json, Seckill.class);
+            // 获取库存
+            Integer num = seckill.getNum();
+            // 通过redis计数器
+            if(redisTemplate.opsForValue().increment(SECKILL_NUM+id,1) <= num){
+                // 还有库存,创建订单
+                SeckillOrder order = new SeckillOrder();
+                //获取登录用户id
+                order.setUserId(LoginInterceptor.getLoginUser().getId());
+                // 生成id
+                order.setOrderId(idWorker.nextId());
+                // 金额
+                order.setPrice(seckill.getPrice() * 100); // 取单位分
+                // 状态
+                order.setStatus(0);
+
+                int count = seckillOrderMapper.insertSelective(order);
+                if(count != 1){
+                    throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
+                }
+            }else{
+                throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
+            }
+
+        }else{
+            // 没有
+            throw new LyException(ExceptionEnum.SECKILL_EXPIRES);
+        }
     }
 }

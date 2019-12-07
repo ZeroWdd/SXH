@@ -1,7 +1,6 @@
 package com.leyou.web.service;
 
 import com.leyou.item.pojo.*;
-import com.leyou.seckill.pojo.Seckill;
 import com.leyou.web.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,10 +74,4 @@ public class GoodsService {
         return map;
     }
 
-    public Map<String, Object> seckillData(Long id) {
-        Seckill seckill = seckillClient.querySeckill(id);
-        Map<String, Object> map = new HashMap<>();
-        map.put("seckill",seckill);
-        return map;
-    }
 }

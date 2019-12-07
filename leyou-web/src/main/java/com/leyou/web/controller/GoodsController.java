@@ -37,19 +37,4 @@ public class GoodsController {
         model.addAllAttributes(modelMap);
         return "item";
     }
-
-    /**
-     * 跳转到详情商品页
-     * @param model
-     * @param id
-     * @return
-     */
-    @GetMapping("/seckill/{id}.html")
-    public String toSeckillPage(Model model,@PathVariable("id")Long id){
-        // 加载所需的数据
-        Map<String, Object> modelMap = goodsService.seckillData(id);
-        // 放入模型
-        model.addAllAttributes(modelMap);
-        return "seckillItem";
-    }
 }

@@ -144,7 +144,7 @@ public class OrderService {
         OrderStatus orderStatus = orderStatusMapper.selectByPrimaryKey(id);
         if(status.equals(orderStatus.getStatus())){
             // 已更改
-            throw new LyException(ExceptionEnum.STATUS_is_true);
+            throw new LyException(ExceptionEnum.STATUS_IS_TRUE);
         }
         // 根据状态判断要修改的时间
         switch (status) {

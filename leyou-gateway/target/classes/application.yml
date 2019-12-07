@@ -61,3 +61,4 @@ leyou:
       - /api/item
 #      - /api/admin   # 测试用
 #      - /api/order   # 测试用
+      - /api/seckill

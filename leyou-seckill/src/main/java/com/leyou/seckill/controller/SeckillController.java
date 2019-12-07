@@ -23,6 +23,8 @@ public class SeckillController {
     @Autowired
     private SeckillService seckillService;
 
+
+
     @ApiOperation("添加秒杀商品")
     @PostMapping("")
     public ResponseEntity<Void> addSeckill(@RequestBody Seckill seckill){
@@ -63,4 +65,12 @@ public class SeckillController {
         Seckill result = seckillService.querySeckill(id);
         return ResponseEntity.ok(result);
     }
+
+    @ApiOperation("根据秒杀id创建订单")
+    @PostMapping("/order/{id}")
+    public ResponseEntity<Void> createOrder(@PathVariable("id") Long id){
+        seckillService.createOrder(id);
+        return ResponseEntity.ok().build();
+    }
+
 }
