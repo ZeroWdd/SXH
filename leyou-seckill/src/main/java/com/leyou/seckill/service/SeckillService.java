@@ -15,7 +15,8 @@ import com.leyou.seckill.interceptor.LoginInterceptor;
 import com.leyou.seckill.mapper.SeckillMapper;
 import com.leyou.seckill.mapper.SeckillOrderMapper;
 import com.leyou.seckill.pojo.Seckill;
-import com.leyou.seckill.pojo.SeckillOrder;
+import com.leyou.seckill.thread.CreateOrderThread;
+import com.leyou.seckill.vo.OrderRecord;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,11 @@ public class SeckillService {
     private StringRedisTemplate redisTemplate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
     @Autowired
     private IdWorker idWorker;
+
+    @Autowired
+    private CreateOrderThread createOrderThread;
 
     private static String SECKILL_KEY = "SECKILL_KEY_"; // key 加上seckill的id
     private static String SECKILL_LIST = "SECKILL_LIST"; //
@@ -221,22 +224,12 @@ public class SeckillService {
             Integer num = seckill.getNum();
             // 通过redis计数器
             if(redisTemplate.opsForValue().increment(SECKILL_NUM+id,1) <= num){
-                // 还有库存,创建订单
-                SeckillOrder order = new SeckillOrder();
-                //获取登录用户id
-                order.setUserId(LoginInterceptor.getLoginUser().getId());
-                // 生成id
-                order.setOrderId(idWorker.nextId());
-                // 金额
-                order.setPrice(seckill.getPrice() * 100); // 取单位分
-                // 状态
-                order.setStatus(0);
-
-                int count = seckillOrderMapper.insertSelective(order);
-                if(count != 1){
-                    throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
-                }
+                // userId和skuid存入redis，以便异步获取
+                redisTemplate.boundListOps(OrderRecord.class.getSimpleName()).leftPush(JSON.toJSONString( new OrderRecord(id, LoginInterceptor.getLoginUser().getId())));
+                // 使用多线程处理订单
+                createOrderThread.createOrder();
             }else{
+                // 秒杀商品已售罄
                 throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
             }
 
