@@ -32,6 +32,7 @@ public class CreateOrderThread {
     private SeckillOrderMapper seckillOrderMapper;
 
     private static String SECKILL_KEY = "SECKILL_KEY_"; // key 加上seckill的id
+    private static String SECKILL_USER_KEY = "SECKILL_USER_KEY_";
 
     @Async
     public void createOrder(){
@@ -58,10 +59,12 @@ public class CreateOrderThread {
         order.setSkuId(seckill.getSkuId());
         // 标题
         order.setTitle(seckill.getTitle());
-
+        // 存入数据库
         int count = seckillOrderMapper.insertSelective(order);
         if(count != 1){
             throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
         }
+        // 标记该用户,防止多次抢购
+        redisTemplate.boundSetOps(SECKILL_USER_KEY + orderRecord.getSkuId()).add(orderRecord.getUserId() + "");
     }
 }

@@ -73,6 +73,7 @@ public enum ExceptionEnum {
     CATEGORY_CHILD_NODE(403,"分类存在子节点"),
     STATUS_IS_TRUE(403,"状态已更改，无需再次操作"),
     SECKILL_IS_ORVER(403,"秒杀已售空"),
+    SECKILL_IS_ROB(403,"抢购成功"),
 
     INVALID_USER_TYPE(400,"无效的参数"),
     INVALID_VERIFY_CODE(400,"无效的验证码"),

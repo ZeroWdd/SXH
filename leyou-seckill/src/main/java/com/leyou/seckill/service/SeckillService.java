@@ -57,6 +57,7 @@ public class SeckillService {
     private static String SECKILL_KEY = "SECKILL_KEY_"; // key 加上seckill的id
     private static String SECKILL_LIST = "SECKILL_LIST"; //
     private static String SECKILL_NUM = "SECKILL_NUM_"; //
+    private static String SECKILL_USER_KEY = "SECKILL_USER_KEY_";
 
 
     @Transactional
@@ -216,6 +217,12 @@ public class SeckillService {
     }
 
     public void createOrder(Long id) {
+        // 判断此用户是否已抢过该商品
+        Boolean flag = redisTemplate.boundSetOps(SECKILL_USER_KEY + id).isMember(LoginInterceptor.getLoginUser().getId() + "");
+        if(flag){
+           // 存在
+           throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
+        }
         // 从redis中取出对应秒杀商品
         String json = redisTemplate.opsForValue().get(SECKILL_KEY + id);
         if(!StringUtils.isEmpty(json)){
