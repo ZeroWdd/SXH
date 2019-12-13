@@ -217,6 +217,7 @@ public class SeckillService {
     }
 
     public void createOrder(Long id) {
+        // TODO ： 使用jmeter测试并发量
         // 判断此用户是否已抢过该商品
         Boolean flag = redisTemplate.boundSetOps(SECKILL_USER_KEY + id).isMember(LoginInterceptor.getLoginUser().getId() + "");
         if(flag){
