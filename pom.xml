@@ -23,6 +23,7 @@
         <module>leyou-stock</module>
         <module>leyou-admin</module>
         <module>leyou-seckill</module>
+        <module>leyou-canal</module>
     </modules>
     <packaging>pom</packaging>
 
