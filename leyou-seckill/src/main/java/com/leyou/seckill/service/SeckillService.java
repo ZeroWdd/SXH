@@ -248,8 +248,20 @@ public class SeckillService {
                 redisTemplate.boundListOps(OrderRecord.class.getSimpleName()).leftPush(JSON.toJSONString( new OrderRecord(id, LoginInterceptor.getLoginUser().getId())));
                 // 使用多线程处理订单
                 createOrderThread.createOrder();
-            }else{
-                // 秒杀商品已售罄
+            }else{// 秒杀商品已售罄
+                // TODO : 此处存在高并发，需要优化
+                // 更改缓存
+                seckill.setNum(0);
+                redisTemplate.opsForValue().set(SECKILL_KEY + id,JSON.toJSONString(seckill));
+                List<Seckill> seckills = JSON.parseArray(redisTemplate.opsForValue().get(SECKILL_LIST), Seckill.class);
+                for(Seckill se : seckills){
+                    if(se.getId().equals(seckill.getId())){
+                        se.setNum(0);
+                    }
+                }
+                redisTemplate.opsForValue().set(SECKILL_LIST,JSON.toJSONString(seckills),5,TimeUnit.MINUTES);
+                // 更改数据库库存
+                seckillMapper.updateByPrimaryKeySelective(seckill);
                 throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
             }
         }else{
