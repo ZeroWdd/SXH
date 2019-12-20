@@ -15,6 +15,7 @@ import com.leyou.seckill.interceptor.LoginInterceptor;
 import com.leyou.seckill.mapper.SeckillMapper;
 import com.leyou.seckill.mapper.SeckillOrderMapper;
 import com.leyou.seckill.pojo.Seckill;
+import com.leyou.seckill.pojo.SeckillOrder;
 import com.leyou.seckill.thread.CreateOrderThread;
 import com.leyou.seckill.vo.OrderRecord;
 import org.apache.commons.lang.StringUtils;
@@ -227,11 +228,11 @@ public class SeckillService {
 
     public void createOrder(Long id) {
         // 判断此用户是否已抢过该商品
-//        Boolean flag = redisTemplate.boundSetOps(SECKILL_USER_KEY + id).isMember(LoginInterceptor.getLoginUser().getId() + "");
-//        if(flag){
-//           // 存在
-//           throw new LyException(ExceptionEnum.SECKILL_IS_ROB);
-//        }
+        Boolean flag = redisTemplate.boundSetOps(SECKILL_USER_KEY + id).isMember(LoginInterceptor.getLoginUser().getId() + "");
+        if(flag){
+           // 存在
+           throw new LyException(ExceptionEnum.SECKILL_IS_ROB);
+        }
         // 从redis中取出对应秒杀商品
         String json = redisTemplate.opsForValue().get(SECKILL_KEY + id);
         if(!StringUtils.isEmpty(json)){
@@ -270,5 +271,13 @@ public class SeckillService {
             // 没有
             throw new LyException(ExceptionEnum.SECKILL_EXPIRES);
         }
+    }
+
+    public SeckillOrder queryOrderById(Long id) {
+        SeckillOrder seckillOrder = seckillOrderMapper.selectByPrimaryKey(id);
+        if(org.springframework.util.StringUtils.isEmpty(seckillOrder)){
+            throw new LyException(ExceptionEnum.SECKILL_ORDER_NOT_FOUND);
+        }
+        return seckillOrder;
     }
 }

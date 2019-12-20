@@ -3,8 +3,10 @@ package com.leyou.seckill.controller;
 import com.leyou.common.pojo.PageResult;
 import com.leyou.item.pojo.Sku;
 import com.leyou.seckill.pojo.Seckill;
+import com.leyou.seckill.pojo.SeckillOrder;
 import com.leyou.seckill.service.SeckillService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,4 +75,11 @@ public class SeckillController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/order/{id}")
+    @ApiOperation(value = "根据订单编号查询订单，返回订单对象", notes = "查询订单")
+    @ApiImplicitParam(name = "id", required = true, value = "订单的编号")
+    public ResponseEntity<SeckillOrder> queryOrderById(@PathVariable("id") Long id) {
+        SeckillOrder order = seckillService.queryOrderById(id);
+        return ResponseEntity.ok(order);
+    }
 }

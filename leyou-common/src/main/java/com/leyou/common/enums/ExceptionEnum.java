@@ -30,6 +30,7 @@ public enum ExceptionEnum {
     ROLE_NOT_FOUND(404,"角色未查询到"),
     PERMISSION_NOT_FOUND(404,"权限未查询到"),
     SECKILL_NOT_FOUND(404,"秒杀未查询到"),
+    SECKILL_ORDER_NOT_FOUND(404,"秒杀订单未查询到"),
 
     BRAND_SAVE_ERROR(500,"品牌新增失败"),
     BRAND_UPDATE_ERROR(500,"品牌修改失败"),
