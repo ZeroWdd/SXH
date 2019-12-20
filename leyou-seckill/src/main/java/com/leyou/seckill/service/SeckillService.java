@@ -227,11 +227,11 @@ public class SeckillService {
 
     public void createOrder(Long id) {
         // 判断此用户是否已抢过该商品
-        Boolean flag = redisTemplate.boundSetOps(SECKILL_USER_KEY + id).isMember(LoginInterceptor.getLoginUser().getId() + "");
-        if(flag){
-           // 存在
-           throw new LyException(ExceptionEnum.SECKILL_IS_ROB);
-        }
+//        Boolean flag = redisTemplate.boundSetOps(SECKILL_USER_KEY + id).isMember(LoginInterceptor.getLoginUser().getId() + "");
+//        if(flag){
+//           // 存在
+//           throw new LyException(ExceptionEnum.SECKILL_IS_ROB);
+//        }
         // 从redis中取出对应秒杀商品
         String json = redisTemplate.opsForValue().get(SECKILL_KEY + id);
         if(!StringUtils.isEmpty(json)){
@@ -248,20 +248,22 @@ public class SeckillService {
                 redisTemplate.boundListOps(OrderRecord.class.getSimpleName()).leftPush(JSON.toJSONString( new OrderRecord(id, LoginInterceptor.getLoginUser().getId())));
                 // 使用多线程处理订单
                 createOrderThread.createOrder();
-            }else{// 秒杀商品已售罄
-                // TODO : 此处存在高并发，需要优化
-                // 更改缓存
-                seckill.setNum(0);
-                redisTemplate.opsForValue().set(SECKILL_KEY + id,JSON.toJSONString(seckill));
-                List<Seckill> seckills = JSON.parseArray(redisTemplate.opsForValue().get(SECKILL_LIST), Seckill.class);
-                for(Seckill se : seckills){
-                    if(se.getId().equals(seckill.getId())){
-                        se.setNum(0);
+
+                if(redisTemplate.opsForValue().increment(SECKILL_NUM+id,1) == num.longValue()){
+                    // 更改缓存
+                    seckill.setNum(0);
+                    redisTemplate.opsForValue().set(SECKILL_KEY + id,JSON.toJSONString(seckill));
+                    List<Seckill> seckills = JSON.parseArray(redisTemplate.opsForValue().get(SECKILL_LIST), Seckill.class);
+                    for(Seckill se : seckills){
+                        if(se.getId().equals(seckill.getId())){
+                            se.setNum(0);
+                        }
                     }
+                    redisTemplate.opsForValue().set(SECKILL_LIST,JSON.toJSONString(seckills),5,TimeUnit.MINUTES);
+                    // 更改数据库库存
+                    seckillMapper.updateByPrimaryKeySelective(seckill);
                 }
-                redisTemplate.opsForValue().set(SECKILL_LIST,JSON.toJSONString(seckills),5,TimeUnit.MINUTES);
-                // 更改数据库库存
-                seckillMapper.updateByPrimaryKeySelective(seckill);
+            }else{// 秒杀商品已售罄
                 throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
             }
         }else{
