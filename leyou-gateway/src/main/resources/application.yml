@@ -48,7 +48,7 @@ zuul:
   sensitive-headers: #配置禁止使用的头信息，治这里设置为null,否则set-cookie无效
 leyou:
   jwt:
-    pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pub # 公钥地址
+    pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\SXH\\rsa.pub # 公钥地址
     cookieName: LY_TOKEN # cookie的名称
   filter:
     allowPaths:

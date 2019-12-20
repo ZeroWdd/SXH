@@ -14,8 +14,8 @@ eureka:
 leyou:
   jwt:
     secret: leyou@Login(Auth}*^31)&wdd% # 登录校验的密钥
-    pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pub # 公钥地址
-    priKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pri # 私钥地址
+    pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\SXH\\rsa.pub # 公钥地址
+    priKeyPath: E:\\Code\\Java_text\\idea-workspace\\SXH\\rsa.pri # 私钥地址
     expire: 30 # 过期时间,单位分钟
     cookieName: LY_TOKEN
     cookieMaxAge: 1800 # 秒 即30分钟

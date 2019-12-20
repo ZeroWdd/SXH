@@ -27,5 +27,5 @@ mybatis:
 
 leyou:
   jwt:
-    pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\leyou\\rsa.pub # 公钥地址
+    pubKeyPath: E:\\Code\\Java_text\\idea-workspace\\SXH\\rsa.pub # 公钥地址
     cookieName: LY_TOKEN
