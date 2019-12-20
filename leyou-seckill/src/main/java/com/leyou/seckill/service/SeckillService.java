@@ -177,7 +177,7 @@ public class SeckillService {
         // 1.先判断redis是否有
         String json = redisTemplate.opsForValue().get(SECKILL_LIST);
         if(StringUtils.isEmpty(json)){
-            // 2.从数据库中查询有效的秒杀商品再前台展示
+            // 2.从数据库中查询有效的秒杀商品在前台展示
             Seckill seckill = new Seckill();
             seckill.setStatus(0);
             select = seckillMapper.select(seckill);
@@ -185,7 +185,16 @@ public class SeckillService {
                 throw new LyException(ExceptionEnum.SECKILL_NOT_FOUND);
             }
             // 获取sku
-            for(Seckill s : select){
+            for (Iterator<Seckill> it = select.iterator(); it.hasNext();) {
+                Seckill s = it.next();
+                // 有可能时间已过期,但数据库尚未更新,需手动更新,写回数据库
+                if(new Date().getTime() - s.getEndTime().getTime() >= 0){
+                    s.setStatus(1);
+                    seckillMapper.updateByPrimaryKeySelective(s);
+                    it.remove();
+                    continue;
+                }
+                // 未过期继续执行
                 Sku sku = goodsClient.querySkuById(s.getSkuId());
                 s.setSku(sku);
             }
@@ -217,17 +226,20 @@ public class SeckillService {
     }
 
     public void createOrder(Long id) {
-        // TODO ： 使用jmeter测试并发量
         // 判断此用户是否已抢过该商品
         Boolean flag = redisTemplate.boundSetOps(SECKILL_USER_KEY + id).isMember(LoginInterceptor.getLoginUser().getId() + "");
         if(flag){
            // 存在
-           throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
+           throw new LyException(ExceptionEnum.SECKILL_IS_ROB);
         }
         // 从redis中取出对应秒杀商品
         String json = redisTemplate.opsForValue().get(SECKILL_KEY + id);
         if(!StringUtils.isEmpty(json)){
             Seckill seckill = JSON.parseObject(json, Seckill.class);
+            // 验证秒杀活动是否开始,防止路径被获取进行攻击
+            if(seckill.getStartTime().getTime() - new Date().getTime() > 0){
+                return;
+            }
             // 获取库存
             Integer num = seckill.getNum();
             // 通过redis计数器
@@ -240,7 +252,6 @@ public class SeckillService {
                 // 秒杀商品已售罄
                 throw new LyException(ExceptionEnum.SECKILL_IS_ORVER);
             }
-
         }else{
             // 没有
             throw new LyException(ExceptionEnum.SECKILL_EXPIRES);
