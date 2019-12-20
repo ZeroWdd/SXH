@@ -26,8 +26,6 @@ public class GoodsService {
     @Autowired
     private SpecificationClient specificationClient;
 
-    @Autowired
-    private SeckillClient seckillClient;
 
     public Map<String, Object> loadData(Long spuId){
         Map<String, Object> map = new HashMap<>();

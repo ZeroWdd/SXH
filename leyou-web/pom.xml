@@ -33,11 +33,6 @@
             <artifactId>leyou-item-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.leyou.parent</groupId>
-            <artifactId>leyou-seckill</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
 </project>
