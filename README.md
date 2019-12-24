@@ -44,8 +44,8 @@
 * 创建数据库
 * 更改application.yml中地址配置
 * 修改本地`host`文件 将虚拟机地址 映射为 `www.leyou.com` 
-
 * 配置nginx，配置文件在conf文件夹下
+* 此项目采用jwt + rsa进行身份验证,因此需要更改部分application.yml的公钥和密钥地址
 
 ## 运行界面展示
 
