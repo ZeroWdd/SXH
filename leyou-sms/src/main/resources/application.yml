@@ -12,7 +12,7 @@ spring:
     host: 192.168.159.138
 aliyun:
   sms:
-    accessKeyId: "LTAI4FxtgTG9eBLHrkBsGC4d"
-    accessKeySecret: "n7PimBiLqJUsmSppr7xtd12L3y7uop"
+    accessKeyId:
+    accessKeySecret: 
     singnName: "商小惠"
     verifyCodeTemplate: "SMS_176914322"
